@@ -10,19 +10,7 @@ public class Pipe : ModuleRules
     protected virtual string PipeIncludePath { get { return Path.Combine(PipePath, "Include"); } }
     protected virtual string PipeSourcePath { get { return Path.Combine(PipePath, "Src"); } }
     protected virtual string PipeTempPath { get { return Path.Combine(this.ModuleDirectory, "Temp"); } }
-    protected virtual string PipeTempIncludePath { get { return Path.Combine(PipeTempPath, "Public"); } }
     protected virtual string PipeTempSourcePath { get { return Path.Combine(PipeTempPath, "Private"); } }
-
-    public virtual bool bRequiresRuntimeLoad
-    {
-        get
-        {
-            return Target.Platform.IsInGroup(UnrealPlatformGroup.Windows) || Target.Platform == UnrealTargetPlatform.Mac;
-            // Other platforms may override this property.
-        }
-    }
-
-    public string LibraryLinkNameBase = "Pipe";
 
 
     public Pipe(ReadOnlyTargetRules Target) : base(Target)
@@ -37,13 +25,10 @@ public class Pipe : ModuleRules
             "Engine"
         });
 
-        PublicDefinitions.Add(String.Format("PIPE_RUNTIME_LOAD_REQUIRED={0}", bRequiresRuntimeLoad ? 1 : 0));
-
         if (!Directory.Exists(PipeTempPath))
         {
             Directory.CreateDirectory(PipeTempPath);
         }
-        CleanCopyDirectory(PipeIncludePath, PipeTempIncludePath, true);
         CleanCopyDirectory(PipeSourcePath, PipeTempSourcePath, true);
 
         bool bIsDebug = Target.Configuration == UnrealTargetConfiguration.Debug || Target.Configuration == UnrealTargetConfiguration.DebugGame;
@@ -51,17 +36,13 @@ public class Pipe : ModuleRules
         PublicDefinitions.Add(String.Format("P_RELEASE={0}", bIsDebug ? 0 : 1));
         PublicDefinitions.Add("P_AUTOREGISTER_ENABLED=0");
 
-        PublicIncludePaths.AddRange(new string[] { PipeTempIncludePath });
+        PublicIncludePaths.AddRange(new string[] { PipeIncludePath });
         PrivateIncludePaths.AddRange(new string[] { PipeTempSourcePath });
     }
 
     private void CleanCopyDirectory(string SourceDir, string DestinationDir, bool bRecursive)
     {
-        if (Directory.Exists(DestinationDir))
-        {
-            Directory.Delete(DestinationDir, true);
-        }
-
+        Directory.Delete(DestinationDir, true);
         CopyDirectory(SourceDir, DestinationDir, bRecursive);
     }
 

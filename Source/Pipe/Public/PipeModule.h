@@ -17,8 +17,4 @@ public:
 	{
 		return true;
 	}
-
-#if PIPE_RUNTIME_LOAD_REQUIRED
-	void* Handle = nullptr;
-#endif
 };
