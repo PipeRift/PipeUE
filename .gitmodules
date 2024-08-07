@@ -1,0 +1,3 @@
+[submodule "Source/ThirdParty/Pipe"]
+	path = Source/ThirdParty/Pipe
+	url = https://github.com/PipeRift/Pipe.git

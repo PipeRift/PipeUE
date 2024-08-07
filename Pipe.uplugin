@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Pipe",
+	"Description": "Pipe library integration",
+	"Category": "Gameplay",
+	"CreatedBy": "Piperift",
+	"CreatedByURL": "http://piperift.com/",
+	"DocsURL": "https://github.com/PipeRift/pipe",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EnabledByDefault": true,
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"Modules": [
+		{
+			"Name": "Pipe",
+			"Type": "Runtime",
+			"LoadingPhase": "PostConfigInit"
+		}
+	]
+}
