@@ -42,7 +42,10 @@ public class Pipe : ModuleRules
 
     private void CleanCopyDirectory(string SourceDir, string DestinationDir, bool bRecursive)
     {
-        Directory.Delete(DestinationDir, true);
+        if (Directory.Exists(DestinationDir))
+        {
+            Directory.Delete(DestinationDir, true);
+        }
         CopyDirectory(SourceDir, DestinationDir, bRecursive);
     }
 

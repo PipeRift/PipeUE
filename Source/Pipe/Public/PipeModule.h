@@ -3,12 +3,19 @@
 #pragma once
 
 #include <Modules/ModuleManager.h>
+#include <Pipe/Core/Log.h>
+
 
 DECLARE_LOG_CATEGORY_EXTERN(LogPipe, Log, All);
 
 class FPipeModule : public IModuleInterface
 {
+protected:
+	p::Logger Logger;
+
 public:
+	FPipeModule();
+
 	/** IModuleInterface */
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
