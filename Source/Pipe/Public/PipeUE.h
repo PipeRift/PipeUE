@@ -206,6 +206,17 @@ namespace p
 		}
 		return p::Move(Results);
 	}
+
+#pragma region Unreal Types Support
+	void RegisterUnrealTypes();
+
+	PIPE_API void Read(Reader& ct, FString& val);
+	PIPE_API void Write(Writer& ct, const FString& val);
+	PIPE_API void Read(Reader& ct, FName& val);
+	PIPE_API void Write(Writer& ct, const FName& val);
+	PIPE_API void Read(Reader& ct, FGameplayTag& val);
+	PIPE_API void Write(Writer& ct, const FGameplayTag& val);
+#pragma endregion Unreal Types Support
 }	 // namespace p
 
 

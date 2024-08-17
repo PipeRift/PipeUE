@@ -2,7 +2,10 @@
 
 #include "PipeModule.h"
 
+#include "PipeUE.h"
+
 #include <Pipe.h>
+
 
 DEFINE_LOG_CATEGORY(LogPipe);
 
@@ -26,6 +29,7 @@ FPipeModule::FPipeModule()
 void FPipeModule::StartupModule()
 {
 	p::Initialize(&Logger);
+	p::RegisterUnrealTypes();
 }
 
 void FPipeModule::ShutdownModule()

@@ -22,7 +22,8 @@ public class Pipe : ModuleRules
         {
             "Core",
             "CoreUObject",
-            "Engine"
+            "Engine",
+            "GameplayTags"
         });
 
         if (!Directory.Exists(PipeTempPath))
