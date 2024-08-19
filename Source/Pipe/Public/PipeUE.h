@@ -3,6 +3,8 @@
 
 #include <Containers/UnrealString.h>
 #include <GameplayTagContainer.h>
+#include <Math/IntPoint.h>
+#include <Math/Vector.h>
 #include <Pipe/Core/String.h>
 #include <PipeColor.h>
 #include <PipeECS.h>
@@ -216,8 +218,101 @@ namespace p
 	PIPE_API void Write(Writer& ct, const FName& val);
 	PIPE_API void Read(Reader& ct, FGameplayTag& val);
 	PIPE_API void Write(Writer& ct, const FGameplayTag& val);
+	PIPE_API void Read(Reader& ct, FColor& val);
+	PIPE_API void Write(Writer& ct, const FColor& val);
+	PIPE_API void Read(Reader& ct, FLinearColor& val);
+	PIPE_API void Write(Writer& ct, const FLinearColor& val);
+	PIPE_API void Read(Reader& ct, FVector2D& Val);
+	PIPE_API void Write(Writer& ct, const FVector2D& Val);
+	PIPE_API void Read(Reader& ct, FVector& Val);
+	PIPE_API void Write(Writer& ct, const FVector& Val);
+	PIPE_API void Read(Reader& ct, FVector4& Val);
+	PIPE_API void Write(Writer& ct, const FVector4& Val);
+	PIPE_API void Read(Reader& ct, FIntPoint& Val);
+	PIPE_API void Write(Writer& ct, const FIntPoint& Val);
+
+	template <typename T, typename Allocator>
+	void Read(Reader& ct, ::TArray<T, Allocator>& Val)
+	{
+		i32 Size;
+		ct.BeginArray(Size);
+		Val.Resize(Size);
+		for (i32 i = 0; i < Size; ++i)
+		{
+			ct.Next(Val[i]);
+		}
+	}
+	template <typename T, typename Allocator>
+	void Write(Writer& ct, const ::TArray<T, Allocator>& Val)
+	{
+		i32 Size = Val.Num();
+		ct.BeginArray(Size);
+		for (i32 i = 0; i < Size; ++i)
+		{
+			ct.Next(Val[i]);
+		}
+	}
+
+
+	// Reflection
+	template <typename T, typename Allocator>
+	inline void BuildType(const ::TArray<T, Allocator>*)
+	{
+		using ArrayType = ::TArray<T, Allocator>;
+		// clang-format off
+		static p::ContainerTypeOps ops{
+			.itemType = p::RegisterTypeId<T>(),
+			.getData = [](void* data) {
+				return (void*)static_cast<ArrayType*>(data)->Data();
+			},
+			.getSize = [](void* data) {
+				return static_cast<ArrayType*>(data)->Size();
+			},
+			.getItem = [](void* data, p::i32 index) {
+				return (void*)(static_cast<ArrayType*>(data)->GetData() + index);
+			},
+			.addItem = [](void* data, void* item) {
+				if (item)
+				{
+					auto& itemRef = *static_cast<T*>(item);
+					if constexpr (p::IsCopyAssignable<T>)
+					{
+						static_cast<ArrayType*>(data)->Add(itemRef);
+					}
+					else
+					{
+						static_cast<ArrayType*>(data)->Add(p::Move(itemRef));
+					}
+				}
+				else
+				{
+					static_cast<ArrayType*>(data)->AddDefaulted();
+				}
+			},
+			.removeItem = [](void* data, p::i32 index) {
+				static_cast<ArrayType*>(data)->RemoveAt(index);
+			},
+			.clear = [](void* data) {
+				static_cast<ArrayType*>(data)->Reset();
+			}
+		};
+		// clang-format on
+		p::AddTypeFlags(p::TF_Container);
+		p::SetTypeOps(&ops);
+	};
 #pragma endregion Unreal Types Support
+
 }	 // namespace p
+
+
+#pragma region Hashing UE Types
+namespace p
+{
+	PIPE_API p::sizet GetHash(const FVector& Value) noexcept;
+	PIPE_API p::sizet GetHash(const FIntPoint& Value) noexcept;
+	PIPE_API p::sizet GetHash(const FGameplayTag& Value) noexcept;
+}	 // namespace p
+#pragma endregion Hashing UE Types
 
 
 UCLASS()
