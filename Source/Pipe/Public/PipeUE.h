@@ -3,6 +3,7 @@
 
 #include <Containers/UnrealString.h>
 #include <GameplayTagContainer.h>
+#include <Kismet/BlueprintFunctionlibrary.h>
 #include <Math/IntPoint.h>
 #include <Math/Vector.h>
 #include <Pipe/Core/String.h>
