@@ -138,19 +138,3 @@ namespace p
 }	 // namespace p
 
 #pragma endregion Unreal Types Support
-
-
-#pragma region Hashing UE Types
-p::sizet p::GetHash(const FVector& Value) noexcept
-{
-	return p::HashBytes(&Value, sizeof(FVector));
-}
-p::sizet p::GetHash(const FIntPoint& Value) noexcept
-{
-	return p::HashBytes(&Value, sizeof(FIntPoint));
-}
-p::sizet p::GetHash(const FGameplayTag& Value) noexcept
-{
-	return GetTypeHash(Value);
-}
-#pragma endregion Hashing UE Types

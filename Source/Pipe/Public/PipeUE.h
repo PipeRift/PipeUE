@@ -307,12 +307,18 @@ namespace p
 
 
 #pragma region Hashing UE Types
-namespace p
+inline p::sizet GetHash(const FVector& Value) noexcept
 {
-	PIPE_API p::sizet GetHash(const FVector& Value) noexcept;
-	PIPE_API p::sizet GetHash(const FIntPoint& Value) noexcept;
-	PIPE_API p::sizet GetHash(const FGameplayTag& Value) noexcept;
-}	 // namespace p
+	return p::HashBytes(&Value, sizeof(FVector));
+}
+inline p::sizet GetHash(const FIntPoint& Value) noexcept
+{
+	return p::HashBytes(&Value, sizeof(FIntPoint));
+}
+inline p::sizet GetHash(const FGameplayTag& Value) noexcept
+{
+	return GetTypeHash(Value);
+}
 #pragma endregion Hashing UE Types
 
 
