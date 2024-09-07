@@ -235,10 +235,10 @@ namespace p
 	template <typename T, typename Allocator>
 	void Read(Reader& ct, ::TArray<T, Allocator>& Val)
 	{
-		i32 Size;
+		u32 Size;
 		ct.BeginArray(Size);
-		Val.Resize(Size);
-		for (i32 i = 0; i < Size; ++i)
+		Val.SetNum(i32(Size));
+		for (u32 i = 0; i < Size; ++i)
 		{
 			ct.Next(Val[i]);
 		}
@@ -246,9 +246,9 @@ namespace p
 	template <typename T, typename Allocator>
 	void Write(Writer& ct, const ::TArray<T, Allocator>& Val)
 	{
-		i32 Size = Val.Num();
+		u32 Size = u32(Val.Num());
 		ct.BeginArray(Size);
-		for (i32 i = 0; i < Size; ++i)
+		for (u32 i = 0; i < Size; ++i)
 		{
 			ct.Next(Val[i]);
 		}
