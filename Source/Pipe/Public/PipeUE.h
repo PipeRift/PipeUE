@@ -231,6 +231,10 @@ namespace p
 	PIPE_API void Write(Writer& ct, const FVector4& Val);
 	PIPE_API void Read(Reader& ct, FIntPoint& Val);
 	PIPE_API void Write(Writer& ct, const FIntPoint& Val);
+	PIPE_API void Read(Reader& ct, FPrimaryAssetType& Val);
+	PIPE_API void Write(Writer& ct, const FPrimaryAssetType& Val);
+	PIPE_API void Read(Reader& ct, FPrimaryAssetId& Val);
+	PIPE_API void Write(Writer& ct, const FPrimaryAssetId& Val);
 
 	template <typename T, typename Allocator>
 	void Read(Reader& ct, ::TArray<T, Allocator>& Val)

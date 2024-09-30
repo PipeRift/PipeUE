@@ -135,6 +135,28 @@ namespace p
 		ct.Next("x", Val.X);
 		ct.Next("y", Val.Y);
 	}
+	void Read(Reader& ct, FPrimaryAssetType& Val)
+	{
+		FName Name;
+		ct.Serialize(Name);
+		Val = FPrimaryAssetType{Name};
+	}
+	void Write(Writer& ct, const FPrimaryAssetType& Val)
+	{
+		ct.Serialize(Val.GetName());
+	}
+	void Read(Reader& ct, FPrimaryAssetId& Val)
+	{
+		ct.BeginObject();
+		ct.Next("type", Val.PrimaryAssetType);
+		ct.Next("name", Val.PrimaryAssetName);
+	}
+	void Write(Writer& ct, const FPrimaryAssetId& Val)
+	{
+		ct.BeginObject();
+		ct.Next("type", Val.PrimaryAssetType);
+		ct.Next("name", Val.PrimaryAssetName);
+	}
 }	 // namespace p
 
 #pragma endregion Unreal Types Support
