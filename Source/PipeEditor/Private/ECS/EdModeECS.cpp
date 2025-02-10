@@ -19,6 +19,7 @@ UEdModeECS::UEdModeECS()
 			FAppStyle::GetAppStyleSetName(), "LevelEditor.FoliageMode", "LevelEditor.FoliageMode.Small"),
 		true, 400);
 }
+
 void UEdModeECS::Enter()
 {
 	Super::Enter();
