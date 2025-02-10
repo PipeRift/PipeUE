@@ -18,6 +18,10 @@
 			"Name": "Pipe",
 			"Type": "Runtime",
 			"LoadingPhase": "PostConfigInit"
+		},{
+			"Name": "PipeEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	]
 }
