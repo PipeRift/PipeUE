@@ -21,7 +21,9 @@ public class PipeEditor : ModuleRules
             "CoreUObject",
             "Engine",
             "Slate",
-            "EditorFramework"
+            "EditorFramework",
+            "SceneOutliner",
+            "ToolMenus"
         });
     }
 }
