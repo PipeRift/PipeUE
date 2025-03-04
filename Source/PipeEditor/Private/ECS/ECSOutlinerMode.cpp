@@ -2,6 +2,8 @@
 
 #include "ECS/ECSOutlinerMode.h"
 
+#include <ToolMenus.h>
+
 
 #define LOCTEXT_NAMESPACE "ECSOutlinerMode"
 

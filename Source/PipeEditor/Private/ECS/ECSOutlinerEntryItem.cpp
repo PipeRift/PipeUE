@@ -2,8 +2,9 @@
 
 #include "ECSOutlinerEntryItem.h"
 
-#include "ISceneOutliner.h"
-#include "Widgets/Text/SInlineEditableTextBlock.h"
+#include <ISceneOutliner.h>
+#include <Widgets/Images/SImage.h>
+#include <Widgets/Text/SInlineEditableTextBlock.h>
 
 
 #define LOCTEXT_NAMESPACE "ECSOutlinerTreeItem"

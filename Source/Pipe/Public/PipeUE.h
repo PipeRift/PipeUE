@@ -15,7 +15,7 @@
 
 
 USTRUCT(BlueprintType)
-struct PIPE_API FPipeId
+struct P_API FPipeId
 {
 	GENERATED_BODY()
 
@@ -213,28 +213,28 @@ namespace p
 #pragma region Unreal Types Support
 	void RegisterUnrealTypes();
 
-	PIPE_API void Read(Reader& ct, FString& val);
-	PIPE_API void Write(Writer& ct, const FString& val);
-	PIPE_API void Read(Reader& ct, FName& val);
-	PIPE_API void Write(Writer& ct, const FName& val);
-	PIPE_API void Read(Reader& ct, FGameplayTag& val);
-	PIPE_API void Write(Writer& ct, const FGameplayTag& val);
-	PIPE_API void Read(Reader& ct, FColor& val);
-	PIPE_API void Write(Writer& ct, const FColor& val);
-	PIPE_API void Read(Reader& ct, FLinearColor& val);
-	PIPE_API void Write(Writer& ct, const FLinearColor& val);
-	PIPE_API void Read(Reader& ct, FVector2D& Val);
-	PIPE_API void Write(Writer& ct, const FVector2D& Val);
-	PIPE_API void Read(Reader& ct, FVector& Val);
-	PIPE_API void Write(Writer& ct, const FVector& Val);
-	PIPE_API void Read(Reader& ct, FVector4& Val);
-	PIPE_API void Write(Writer& ct, const FVector4& Val);
-	PIPE_API void Read(Reader& ct, FIntPoint& Val);
-	PIPE_API void Write(Writer& ct, const FIntPoint& Val);
-	PIPE_API void Read(Reader& ct, FPrimaryAssetType& Val);
-	PIPE_API void Write(Writer& ct, const FPrimaryAssetType& Val);
-	PIPE_API void Read(Reader& ct, FPrimaryAssetId& Val);
-	PIPE_API void Write(Writer& ct, const FPrimaryAssetId& Val);
+	P_API void Read(Reader& ct, FString& val);
+	P_API void Write(Writer& ct, const FString& val);
+	P_API void Read(Reader& ct, FName& val);
+	P_API void Write(Writer& ct, const FName& val);
+	P_API void Read(Reader& ct, FGameplayTag& val);
+	P_API void Write(Writer& ct, const FGameplayTag& val);
+	P_API void Read(Reader& ct, FColor& val);
+	P_API void Write(Writer& ct, const FColor& val);
+	P_API void Read(Reader& ct, FLinearColor& val);
+	P_API void Write(Writer& ct, const FLinearColor& val);
+	P_API void Read(Reader& ct, FVector2D& Val);
+	P_API void Write(Writer& ct, const FVector2D& Val);
+	P_API void Read(Reader& ct, FVector& Val);
+	P_API void Write(Writer& ct, const FVector& Val);
+	P_API void Read(Reader& ct, FVector4& Val);
+	P_API void Write(Writer& ct, const FVector4& Val);
+	P_API void Read(Reader& ct, FIntPoint& Val);
+	P_API void Write(Writer& ct, const FIntPoint& Val);
+	P_API void Read(Reader& ct, FPrimaryAssetType& Val);
+	P_API void Write(Writer& ct, const FPrimaryAssetType& Val);
+	P_API void Read(Reader& ct, FPrimaryAssetId& Val);
+	P_API void Write(Writer& ct, const FPrimaryAssetId& Val);
 
 	template <typename T, typename Allocator>
 	void Read(Reader& ct, ::TArray<T, Allocator>& Val)
@@ -327,7 +327,7 @@ inline p::sizet GetHash(const FGameplayTag& Value) noexcept
 
 
 UCLASS()
-class PIPE_API UPipeLibrary : public UBlueprintFunctionLibrary
+class P_API UPipeLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 

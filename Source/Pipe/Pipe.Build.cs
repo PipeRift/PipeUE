@@ -35,6 +35,10 @@ public class Pipe : ModuleRules
         bool bIsDebug = Target.Configuration == UnrealTargetConfiguration.Debug || Target.Configuration == UnrealTargetConfiguration.DebugGame;
         PublicDefinitions.Add(String.Format("P_DEBUG={0}", bIsDebug ? 1 : 0));
         PublicDefinitions.Add(String.Format("P_RELEASE={0}", bIsDebug ? 0 : 1));
+
+        PublicDefinitions.Add("PIPE_IMPORTS=1");
+        PrivateDefinitions.Add("PIPE_EXPORTS=1");
+
         PublicDefinitions.Add("P_AUTOREGISTER_ENABLED=0");
 
         PublicIncludePaths.AddRange(new string[] { PipeIncludePath });

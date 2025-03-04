@@ -4,6 +4,8 @@
 
 #include "PipeEditorStyle.h"
 
+#include <PropertyEditorModule.h>
+
 
 DEFINE_LOG_CATEGORY(LogPipeEditor)
 
