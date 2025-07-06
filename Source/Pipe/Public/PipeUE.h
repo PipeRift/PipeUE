@@ -231,6 +231,8 @@ namespace p
 	P_API void Write(Writer& ct, const FVector4& Val);
 	P_API void Read(Reader& ct, FIntPoint& Val);
 	P_API void Write(Writer& ct, const FIntPoint& Val);
+	P_API void Read(Reader& ct, FIntVector& Val);
+	P_API void Write(Writer& ct, const FIntVector& Val);
 	P_API void Read(Reader& ct, FPrimaryAssetType& Val);
 	P_API void Write(Writer& ct, const FPrimaryAssetType& Val);
 	P_API void Read(Reader& ct, FPrimaryAssetId& Val);
