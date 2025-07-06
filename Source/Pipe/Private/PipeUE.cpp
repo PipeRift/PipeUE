@@ -16,6 +16,7 @@ P_NATIVE_NAMED(FVector2D, "UE::Vector2D")
 P_NATIVE_NAMED(FVector, "UE::Vector3")
 P_NATIVE_NAMED(FVector4, "UE::Vector4")
 P_NATIVE_NAMED(FIntPoint, "UE::IntPoint")
+P_NATIVE_NAMED(FIntVector, "UE::IntVector")
 
 namespace p
 {
@@ -134,6 +135,20 @@ namespace p
 		ct.BeginObject();
 		ct.Next("x", Val.X);
 		ct.Next("y", Val.Y);
+	}
+	void Read(Reader& ct, FIntVector& Val)
+	{
+		ct.BeginObject();
+		ct.Next("x", Val.X);
+		ct.Next("y", Val.Y);
+		ct.Next("z", Val.Z);
+	}
+	void Write(Writer& ct, const FIntVector& Val)
+	{
+		ct.BeginObject();
+		ct.Next("x", Val.X);
+		ct.Next("y", Val.Y);
+		ct.Next("z", Val.Z);
 	}
 	void Read(Reader& ct, FPrimaryAssetType& Val)
 	{
