@@ -62,10 +62,18 @@ namespace p
 
 	inline FName ToUE(Tag Value)
 	{
+		if (Value.IsNone())
+		{
+			return {};
+		}
 		return FName(Value.Size(), Value.Data());
 	}
 	inline Tag FromUE(const FName& Value)
 	{
+		if (Value.IsNone())
+		{
+			return {};
+		}
 		static FString Str;
 		Value.ToString(Str);
 		auto tmp = StringCast<char>(*Str, Str.Len());
