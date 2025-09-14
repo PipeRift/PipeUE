@@ -10,6 +10,7 @@ P_NATIVE_NAMED(FString, "UE::String")
 P_NATIVE_NAMED(FName, "UE::Name")
 P_NATIVE_NAMED(FText, "UE::Text")
 P_NATIVE_NAMED(FGameplayTag, "UE::GameplayTag")
+P_NATIVE_NAMED(FGameplayTagContainer, "UE::GameplayTagContainer")
 P_NATIVE_NAMED(FColor, "UE::Color")
 P_NATIVE_NAMED(FLinearColor, "UE::LinearColor")
 P_NATIVE_NAMED(FVector2D, "UE::Vector2D")
@@ -54,6 +55,17 @@ namespace p
 	void Write(Writer& ct, const FGameplayTag& Val)
 	{
 		ct.Serialize(Val.GetTagName());
+	}
+
+	void Read(Reader& ct, FGameplayTagContainer& Val)
+	{
+		::TArray<FGameplayTag> Tags;
+		ct.Serialize(Tags);
+		Val = FGameplayTagContainer::CreateFromArray(Tags);
+	}
+	void Write(Writer& ct, const FGameplayTagContainer& Val)
+	{
+		ct.Serialize(Val.GetGameplayTagArray());
 	}
 
 	void Read(Reader& ct, FColor& Val)

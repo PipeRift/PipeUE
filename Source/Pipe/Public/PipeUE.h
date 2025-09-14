@@ -219,6 +219,8 @@ namespace p
 	P_API void Write(Writer& ct, const FName& val);
 	P_API void Read(Reader& ct, FGameplayTag& val);
 	P_API void Write(Writer& ct, const FGameplayTag& val);
+	P_API void Read(Reader& ct, FGameplayTagContainer& val);
+	P_API void Write(Writer& ct, const FGameplayTagContainer& val);
 	P_API void Read(Reader& ct, FColor& val);
 	P_API void Write(Writer& ct, const FColor& val);
 	P_API void Read(Reader& ct, FLinearColor& val);
