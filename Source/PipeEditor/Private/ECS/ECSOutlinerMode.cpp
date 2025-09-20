@@ -92,3 +92,5 @@ void FECSOutlinerMode::ResetOutlinerSelection()
 //{
 //	return static_cast<SECSOutliner*>(SceneOutliner);
 // }
+
+#undef LOCTEXT_NAMESPACE
