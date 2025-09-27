@@ -48,6 +48,48 @@ struct P_API FPipeId
 };
 
 
+USTRUCT(BlueprintType)
+struct P_API FPipeEntityContext
+{
+	GENERATED_BODY()
+
+	p::EntityContext* Ctx = nullptr;
+
+	FPipeEntityContext() = default;
+	FPipeEntityContext(p::EntityContext& Ctx) : Ctx(&Ctx) {}
+	FPipeEntityContext(const FPipeEntityContext& Other) : Ctx(Other.Ctx) {}
+	FPipeEntityContext& operator=(const FPipeEntityContext& Other)
+	{
+		Ctx = Other.Ctx;
+		return *this;
+	}
+
+	p::EntityContext& operator*() const
+	{
+		return *Ctx;
+	}
+	p::EntityContext* operator->() const
+	{
+		return Ctx;
+	}
+
+	bool operator==(const FPipeEntityContext& Other) const
+	{
+		return Ctx == Other.Ctx;
+	}
+
+	friend uint32 GetTypeHash(const FPipeEntityContext& Value)
+	{
+		return GetTypeHash(Value.Ctx);
+	}
+
+	operator p::EntityContext&() const
+	{
+		return *Ctx;
+	}
+};
+
+
 namespace p
 {
 	inline FString ToUE(StringView Value)

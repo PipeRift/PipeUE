@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "PipeUE.h"
+
 #include <CoreMinimal.h>
 #include <PipeECS.h>
 #include <Subsystems/WorldSubsystem.h>
@@ -42,6 +44,9 @@ protected:
 public:
 	static UECSSubsystem* Get(const UWorld* World);
 	static UECSSubsystem* Get(const UObject* ContextObject);
+
+	UFUNCTION(BlueprintPure, Category = "ECS", meta = (WorldContext = "ContextObject"))
+	static FPipeEntityContext GetMainContext(const UObject* ContextObject);
 };
 
 

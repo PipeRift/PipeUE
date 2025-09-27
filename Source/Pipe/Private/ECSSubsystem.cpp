@@ -97,4 +97,8 @@ UECSSubsystem* UECSSubsystem::Get(const UObject* ContextObject)
 	return UECSSubsystem::Get(World);
 }
 
+FPipeEntityContext UECSSubsystem::GetMainContext(const UObject* ContextObject)
+{
+	return {Get(ContextObject)->GetContext()};
+}
 #undef LOCTEXT_NAMESPACE
