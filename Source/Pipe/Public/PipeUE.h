@@ -64,11 +64,11 @@ struct P_API FPipeEntityContext
 		return *this;
 	}
 
-	p::EntityContext& operator*() const
+	inline p::EntityContext& operator*() const
 	{
 		return *Ctx;
 	}
-	p::EntityContext* operator->() const
+	inline p::EntityContext* operator->() const
 	{
 		return Ctx;
 	}
