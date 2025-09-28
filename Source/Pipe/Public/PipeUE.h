@@ -82,11 +82,6 @@ struct P_API FPipeEntityContext
 	{
 		return GetTypeHash(Value.Ctx);
 	}
-
-	operator p::EntityContext&() const
-	{
-		return *Ctx;
-	}
 };
 
 
