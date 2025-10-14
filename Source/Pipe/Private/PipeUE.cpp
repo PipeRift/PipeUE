@@ -2,6 +2,7 @@
 
 #include "PipeUE.h"
 
+#include <Engine/AssetManager.h>
 #include <GameplayTagContainer.h>
 
 
@@ -176,13 +177,61 @@ namespace p
 	{
 		ct.BeginObject();
 		ct.Next("type", Val.PrimaryAssetType);
-		ct.Next("name", Val.PrimaryAssetName);
+		if (Val.PrimaryAssetType.IsValid())
+		{
+			ct.Next("name", Val.PrimaryAssetName);
+		}
 	}
 	void Write(Writer& ct, const FPrimaryAssetId& Val)
 	{
 		ct.BeginObject();
 		ct.Next("type", Val.PrimaryAssetType);
-		ct.Next("name", Val.PrimaryAssetName);
+		if (Val.PrimaryAssetType.IsValid())
+		{
+			ct.Next("name", Val.PrimaryAssetName);
+		}
+	}
+
+	void Read(Reader& ct, UObject*& Val)
+	{
+		FPrimaryAssetId Id;
+		Read(ct, Id);
+		if (Id.IsValid())
+		{
+			Val = GEngine->AssetManager->GetPrimaryAssetObject(Id);
+		}
+		else
+		{
+			Val = {};
+		}
+	}
+	void Write(Writer& ct, const UObject*& Val)
+	{
+		FPrimaryAssetId Id;
+		if (Val)
+		{
+			Id = Val->GetPrimaryAssetId();
+		}
+		Write(ct, Id);
+	}
+
+	void Read(Reader& ct, FSoftObjectPtr& Val)
+	{
+		FPrimaryAssetId Id;
+		Read(ct, Id);
+		if (Id.IsValid())
+		{
+			Val = {GEngine->AssetManager->GetPrimaryAssetPath(Id)};
+		}
+		else
+		{
+			Val = {};
+		}
+	}
+	void Write(Writer& ct, const FSoftObjectPtr& Val)
+	{
+		const FPrimaryAssetId Id = GEngine->AssetManager->GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
+		Write(ct, Id);
 	}
 }	 // namespace p
 

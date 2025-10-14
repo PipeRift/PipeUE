@@ -284,6 +284,26 @@ namespace p
 	P_API void Write(Writer& ct, const FPrimaryAssetType& Val);
 	P_API void Read(Reader& ct, FPrimaryAssetId& Val);
 	P_API void Write(Writer& ct, const FPrimaryAssetId& Val);
+	P_API void Read(Reader& ct, UObject*& Val);
+	P_API void Write(Writer& ct, const UObject*& Val);
+	P_API void Read(Reader& ct, UObject*& Val);
+	P_API void Write(Writer& ct, const UObject*& Val);
+	template <Derived<UObject> T>
+	void Read(Reader& ct, T*& Val)
+	{
+		UObject* Object;
+		Read(ct, Object);
+		Val = Cast<T>(Object);
+	}
+	P_API void Read(Reader& ct, FSoftObjectPtr& Val);
+	P_API void Write(Writer& ct, const FSoftObjectPtr& Val);
+	template <Derived<UObject> T>
+	void Read(Reader& ct, TSoftObjectPtr<T>& Val)
+	{
+		FSoftObjectPtr SoftObject;
+		Read(ct, SoftObject);
+		Val = TSoftObjectPtr<T>(SoftObject);
+	}
 
 	template <typename T, typename Allocator>
 	void Read(Reader& ct, ::TArray<T, Allocator>& Val)
