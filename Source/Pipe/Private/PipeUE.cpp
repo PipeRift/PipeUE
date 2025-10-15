@@ -2,7 +2,6 @@
 
 #include "PipeUE.h"
 
-#include <Engine/AssetManager.h>
 #include <GameplayTagContainer.h>
 
 
@@ -33,7 +32,9 @@ namespace p
 	void Write(Writer& ct, const FString& Val)
 	{
 		auto Tmp = StringCast<char>(*Val, Val.Len());
+		ct.PushAddFlags(WriteFlags_CacheStringValues);
 		ct.Serialize(p::StringView(Tmp.Get(), static_cast<sizet>(Tmp.Length())));
+		ct.PopFlags();
 	}
 
 	void Read(Reader& ct, FName& Val)

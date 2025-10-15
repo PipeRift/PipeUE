@@ -2,6 +2,7 @@
 #pragma once
 
 #include <Containers/UnrealString.h>
+#include <Engine/AssetManager.h>
 #include <GameplayTagContainer.h>
 #include <Kismet/BlueprintFunctionlibrary.h>
 #include <Math/IntPoint.h>
@@ -300,9 +301,22 @@ namespace p
 	template <Derived<UObject> T>
 	void Read(Reader& ct, TSoftObjectPtr<T>& Val)
 	{
-		FSoftObjectPtr SoftObject;
-		Read(ct, SoftObject);
-		Val = TSoftObjectPtr<T>(SoftObject);
+		FPrimaryAssetId Id;
+		Read(ct, Id);
+		if (Id.IsValid())
+		{
+			Val = {GEngine->AssetManager->GetPrimaryAssetPath(Id)};
+		}
+		else
+		{
+			Val = {};
+		}
+	}
+	template <Derived<UObject> T>
+	void Write(Writer& ct, const TSoftObjectPtr<T>& Val)
+	{
+		const FPrimaryAssetId Id = GEngine->AssetManager->GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
+		Write(ct, Id);
 	}
 
 	template <typename T, typename Allocator>
