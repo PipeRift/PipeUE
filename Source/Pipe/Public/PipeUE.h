@@ -4,7 +4,7 @@
 #include <Containers/UnrealString.h>
 #include <Engine/AssetManager.h>
 #include <GameplayTagContainer.h>
-#include <Kismet/BlueprintFunctionlibrary.h>
+#include <Kismet/BlueprintFunctionLibrary.h>
 #include <Math/IntPoint.h>
 #include <Math/Vector.h>
 #include <Pipe/Core/String.h>
