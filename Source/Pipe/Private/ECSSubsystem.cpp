@@ -11,6 +11,8 @@
 
 #define LOCTEXT_NAMESPACE "ECS"
 
+p::TMap<UScriptStruct*, p::TypeId> UECSSubsystem::StructsToTypeIds{};
+
 
 void UECSSubsystem::PostInitialize()
 {
@@ -40,7 +42,7 @@ bool UECSSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
 
 DEFINE_FUNCTION(UECSSubsystem::execGetComponent)
 {
-	P_GET_OBJECT(UECSSubsystem, ECS);
+	P_GET_STRUCT_REF(FPipeEntityContext, Ctx);
 	P_GET_STRUCT(FPipeId, Id);
 
 	// Read wildcard Value input.
@@ -68,11 +70,11 @@ DEFINE_FUNCTION(UECSSubsystem::execGetComponent)
 	{
 		P_NATIVE_BEGIN;
 		*(bool*) RESULT_PARAM = false;
-		if (ECS && ValueProp->Struct)
+		if (ValueProp->Struct)
 		{
-			if (p::TypeId* TypeId = ECS->StructsToTypeIds.Find(ValueProp->Struct))
+			if (p::TypeId* TypeId = StructsToTypeIds.Find(ValueProp->Struct))
 			{
-				if (p::BasePool* Pool = ECS->GetContext().GetPool(*TypeId))
+				if (p::BasePool* Pool = Ctx->GetPool(*TypeId))
 				{
 					if (void* Value = Pool->TryGetVoid(Id))
 					{
