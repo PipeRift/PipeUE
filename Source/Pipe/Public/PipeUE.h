@@ -294,11 +294,23 @@ namespace p
 	{
 		UObject* Object;
 		Read(ct, Object);
-		Val = Cast<T>(Object);
+		Val = ::Cast<T>(Object);
+	}
+	template <typename T>
+	void Write(Writer& ct, const TObjectPtr<T>& Val)
+	{
+		Write(ct, Val.Get());
+	}
+	template <typename T>
+	void Read(Reader& ct, TObjectPtr<T>& Val)
+	{
+		T* Object;
+		Read(ct, Object);
+		Val = TObjectPtr<T>{Object};
 	}
 	P_API void Read(Reader& ct, FSoftObjectPtr& Val);
 	P_API void Write(Writer& ct, const FSoftObjectPtr& Val);
-	template <Derived<UObject> T>
+	template <typename T>
 	void Read(Reader& ct, TSoftObjectPtr<T>& Val)
 	{
 		FPrimaryAssetId Id;
@@ -312,7 +324,7 @@ namespace p
 			Val = {};
 		}
 	}
-	template <Derived<UObject> T>
+	template <typename T>
 	void Write(Writer& ct, const TSoftObjectPtr<T>& Val)
 	{
 		const FPrimaryAssetId Id = GEngine->AssetManager->GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
