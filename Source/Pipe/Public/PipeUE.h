@@ -331,6 +331,27 @@ namespace p
 		Write(ct, Id);
 	}
 
+	template <typename T>
+	void Read(Reader& ct, TSoftClassPtr<T>& Val)
+	{
+		FPrimaryAssetId Id;
+		Read(ct, Id);
+		if (Id.IsValid())
+		{
+			Val = {GEngine->AssetManager->GetPrimaryAssetPath(Id)};
+		}
+		else
+		{
+			Val = {};
+		}
+	}
+	template <typename T>
+	void Write(Writer& ct, const TSoftClassPtr<T>& Val)
+	{
+		const FPrimaryAssetId Id = GEngine->AssetManager->GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
+		Write(ct, Id);
+	}
+
 	template <typename T, typename Allocator>
 	void Read(Reader& ct, ::TArray<T, Allocator>& Val)
 	{
