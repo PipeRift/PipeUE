@@ -427,6 +427,14 @@ namespace p
 
 
 #pragma region Hashing UE Types
+inline p::sizet GetHash(const FName& Value) noexcept
+{
+	return GetTypeHash(Value);
+}
+inline p::sizet GetHash(const FGameplayTag& Value) noexcept
+{
+	return GetTypeHash(Value);
+}
 inline p::sizet GetHash(const FVector& Value) noexcept
 {
 	return p::HashBytes(&Value, sizeof(FVector));
@@ -435,9 +443,18 @@ inline p::sizet GetHash(const FIntPoint& Value) noexcept
 {
 	return p::HashBytes(&Value, sizeof(FIntPoint));
 }
-inline p::sizet GetHash(const FGameplayTag& Value) noexcept
+inline p::sizet GetHash(const FPrimaryAssetId& Value) noexcept
 {
-	return GetTypeHash(Value);
+	return p::HashCombine(GetHash(Value.PrimaryAssetType), GetHash(Value.PrimaryAssetName));
+}
+inline p::sizet GetHash(const FSoftObjectPath& Value) noexcept
+{
+	return GetHash(GEngine->AssetManager->GetPrimaryAssetIdForPath(Value));
+}
+template <typename T>
+inline p::sizet GetHash(const TSoftObjectPtr<T>& Value) noexcept
+{
+	return GetHash(Value.ToSoftObjectPath());
 }
 #pragma endregion Hashing UE Types
 
