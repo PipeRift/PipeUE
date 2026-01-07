@@ -46,6 +46,10 @@ struct P_API FPipeId
 	{
 		return Id != Other.Id;
 	}
+	friend uint32 GetTypeHash(const FPipeId Value)
+	{
+		return uint32(Value.Id);
+	}
 };
 
 
