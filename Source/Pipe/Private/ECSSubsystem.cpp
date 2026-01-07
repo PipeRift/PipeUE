@@ -35,6 +35,8 @@ bool UECSSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
 		case EWorldType::PIE:
 		case EWorldType::EditorPreview:
 		case EWorldType::GamePreview:
+		case EWorldType::GameRPC:
+		case EWorldType::Inactive:
 			return true;
 	}
 	return false;
