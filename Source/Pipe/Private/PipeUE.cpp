@@ -5,24 +5,9 @@
 #include <GameplayTagContainer.h>
 
 
-#pragma region Unreal Types Support
-P_NATIVE_NAMED(FString, "UE::String")
-P_NATIVE_NAMED(FName, "UE::Name")
-P_NATIVE_NAMED(FText, "UE::Text")
-P_NATIVE_NAMED(FGameplayTag, "UE::GameplayTag")
-P_NATIVE_NAMED(FGameplayTagContainer, "UE::GameplayTagContainer")
-P_NATIVE_NAMED(FColor, "UE::Color")
-P_NATIVE_NAMED(FLinearColor, "UE::LinearColor")
-P_NATIVE_NAMED(FVector2D, "UE::Vector2D")
-P_NATIVE_NAMED(FVector, "UE::Vector3")
-P_NATIVE_NAMED(FVector4, "UE::Vector4")
-P_NATIVE_NAMED(FIntPoint, "UE::IntPoint")
-P_NATIVE_NAMED(FIntVector, "UE::IntVector")
-
+#pragma region Unreal Serialization Support
 namespace p
 {
-	void RegisterUnrealTypes() {}
-
 	void Read(Reader& ct, FString& Val)
 	{
 		p::StringView Value;
@@ -35,6 +20,42 @@ namespace p
 		ct.PushAddFlags(WriteFlags_CacheStringValues);
 		ct.Serialize(p::StringView(Tmp.Get(), static_cast<sizet>(Tmp.Length())));
 		ct.PopFlags();
+	}
+
+	void Write(Writer& ct, const FText& Val)
+	{
+		ct.BeginObject();
+		const FString* Source = FTextInspector::GetSourceString(Val);
+		ct.Next("Source", *Source);
+		if (Val.ShouldGatherForLocalization())
+		{
+			const FString Namespace = FTextInspector::GetNamespace(Val).Get("");
+			const FString Key = FTextInspector::GetKey(Val).Get("");
+			ct.Next("NS", Namespace);
+			ct.Next("Key", Key);
+		}
+		else
+		{
+			ct.Next("NS", FString{});
+			ct.Next("Key", FString{});
+		}
+		ct.Leave();
+	}
+
+	void Read(Reader& ct, FText& Val)
+	{
+		FString Source, Namespace, Key;
+		ct.BeginObject();
+		ct.Next("Source", Source);
+		ct.Next("NS", Namespace);
+		ct.Next("Key", Key);
+		ct.Leave();
+
+		if (Namespace.IsEmpty() || Key.IsEmpty() ||
+			!FText::FindTextInLiveTable_Advanced(Namespace, Key, Val, &Source))
+		{
+			Val = FText::AsLocalizable_Advanced(Namespace, Key, MoveTemp(Source));
+		}
 	}
 
 	void Read(Reader& ct, FName& Val)
@@ -234,6 +255,35 @@ namespace p
 		const FPrimaryAssetId Id = GEngine->AssetManager->GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
 		Write(ct, Id);
 	}
+
+
+	FPipeArchive::FPipeArchive(ReadWriter& Ct) : Ct(Ct)
+	{
+		SetIsSaving(Ct.IsWriting());
+		SetIsLoading(Ct.IsReading());
+	}
+
+	FPipeArchive::~FPipeArchive() {}
+}	 // namespace p
+#pragma endregion Unreal Serialization Support
+
+
+#pragma region Unreal Types Support
+namespace p
+{
+	void RegisterUnrealTypes() {}
 }	 // namespace p
 
+P_NATIVE_NAMED(FString, "UE::String")
+P_NATIVE_NAMED(FName, "UE::Name")
+P_NATIVE_NAMED(FText, "UE::Text")
+P_NATIVE_NAMED(FGameplayTag, "UE::GameplayTag")
+P_NATIVE_NAMED(FGameplayTagContainer, "UE::GameplayTagContainer")
+P_NATIVE_NAMED(FColor, "UE::Color")
+P_NATIVE_NAMED(FLinearColor, "UE::LinearColor")
+P_NATIVE_NAMED(FVector2D, "UE::Vector2D")
+P_NATIVE_NAMED(FVector, "UE::Vector3")
+P_NATIVE_NAMED(FVector4, "UE::Vector4")
+P_NATIVE_NAMED(FIntPoint, "UE::IntPoint")
+P_NATIVE_NAMED(FIntVector, "UE::IntVector")
 #pragma endregion Unreal Types Support

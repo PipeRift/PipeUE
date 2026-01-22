@@ -260,11 +260,11 @@ namespace p
 		return p::Move(Results);
 	}
 
-#pragma region Unreal Types Support
-	void RegisterUnrealTypes();
-
+#pragma region Unreal Serialization Support
 	P_API void Read(Reader& ct, FString& val);
 	P_API void Write(Writer& ct, const FString& val);
+	P_API void Read(Reader& ct, FText& Val);
+	P_API void Write(Writer& ct, const FText& Val);
 	P_API void Read(Reader& ct, FName& val);
 	P_API void Write(Writer& ct, const FName& val);
 	P_API void Read(Reader& ct, FGameplayTag& val);
@@ -378,6 +378,20 @@ namespace p
 		}
 	}
 
+	class FPipeArchive final : public FArchive
+	{
+	public:
+		FPipeArchive(ReadWriter& Ct);
+		virtual ~FPipeArchive() override;
+
+	private:
+		ReadWriter& Ct;
+	};
+#pragma endregion Unreal Serialization Support
+
+
+#pragma region Unreal Types Support
+	void RegisterUnrealTypes();
 
 	// Reflection
 	template <typename T, typename Allocator>
