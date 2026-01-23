@@ -290,9 +290,7 @@ namespace p
 	P_API void Read(Reader& ct, FPrimaryAssetId& Val);
 	P_API void Write(Writer& ct, const FPrimaryAssetId& Val);
 	P_API void Read(Reader& ct, UObject*& Val);
-	P_API void Write(Writer& ct, const UObject*& Val);
-	P_API void Read(Reader& ct, UObject*& Val);
-	P_API void Write(Writer& ct, const UObject*& Val);
+	P_API void Write(Writer& ct, const UObject* Val);
 	template <Derived<UObject> T>
 	void Read(Reader& ct, T*& Val)
 	{

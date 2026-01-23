@@ -227,7 +227,7 @@ namespace p
 			Val = {};
 		}
 	}
-	void Write(Writer& ct, const UObject*& Val)
+	void Write(Writer& ct, const UObject* Val)
 	{
 		FPrimaryAssetId Id;
 		if (Val)
