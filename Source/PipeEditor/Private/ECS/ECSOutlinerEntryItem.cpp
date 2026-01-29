@@ -3,6 +3,7 @@
 #include "ECSOutlinerEntryItem.h"
 
 #include <ISceneOutliner.h>
+#include <PipeUE.h>
 #include <Widgets/Images/SImage.h>
 #include <Widgets/Text/SInlineEditableTextBlock.h>
 

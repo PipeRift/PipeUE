@@ -15,24 +15,30 @@
 #include "PipeUE.generated.h"
 
 
+inline uint32 GetTypeHash(const p::Id Value)
+{
+	return GetTypeHash(Value.GetRaw());
+}
+
+
 USTRUCT(BlueprintType)
 struct P_API FPipeId
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Id = static_cast<int32>(p::NoId);
+	int32 Id = static_cast<int32>(p::NoId.GetRaw());
 
 	FPipeId() = default;
-	FPipeId(p::Id Id) : Id(static_cast<int32>(Id)) {}
+	FPipeId(p::Id Id) : Id(static_cast<int32>(Id.GetRaw())) {}
 
 	operator p::Id() const
 	{
-		return static_cast<p::Id>(Id);
+		return p::Id::MakeRaw(static_cast<p::Id::Value>(Id));
 	}
 	bool IsNone() const
 	{
-		return static_cast<p::Id>(Id) == p::NoId;
+		return operator p::Id() == p::NoId;
 	}
 	operator bool() const
 	{
@@ -48,7 +54,7 @@ struct P_API FPipeId
 	}
 	friend uint32 GetTypeHash(const FPipeId Value)
 	{
-		return uint32(Value.Id);
+		return GetTypeHash(Value.Id);
 	}
 };
 
@@ -199,7 +205,7 @@ namespace p
 	}
 	inline Id FromUE(FPipeId Value)
 	{
-		return {Value};
+		return Value;
 	}
 
 	template <typename T, typename U = decltype(ToUE(std::declval<const T&>()))>
