@@ -20,11 +20,13 @@ void UECSSubsystem::PostInitialize()
 {
 	Super::PostInitialize();
 	Ctx.SetStatic<UECSSubsystem*>(this);
+	Ctx.SetStatic<TObjectPtr<UWorld>>(GetWorld());
 }
 
 void UECSSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
+	Ctx.RemoveStatic<TObjectPtr<UWorld>>();
 	Ctx.RemoveStatic<UECSSubsystem*>();
 }
 
