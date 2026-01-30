@@ -49,15 +49,3 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ECS", meta = (WorldContext = "ContextObject"))
 	static FPipeEntityContext GetMainContext(const UObject* ContextObject);
 };
-
-
-inline p::EntityContext* GetECS(const UWorld* World)
-{
-	auto* ECSSubsystem = UECSSubsystem::Get(World);
-	return ECSSubsystem ? &ECSSubsystem->GetContext() : nullptr;
-}
-inline p::EntityContext* GetECS(const UObject* ContextObject)
-{
-	auto* ECSSubsystem = UECSSubsystem::Get(ContextObject);
-	return ECSSubsystem ? &ECSSubsystem->GetContext() : nullptr;
-}
