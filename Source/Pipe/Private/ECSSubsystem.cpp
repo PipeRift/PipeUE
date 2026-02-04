@@ -80,7 +80,7 @@ DEFINE_FUNCTION(UECSSubsystem::execGetComponent)
 		{
 			if (p::TypeId* TypeId = StructsToTypeIds.Find(ValueProp->Struct))
 			{
-				if (p::BasePool* Pool = Ctx->GetPool(*TypeId))
+				if (p::IPool* Pool = Ctx->GetPool(*TypeId))
 				{
 					if (void* Value = Pool->TryGetVoid(Id))
 					{

@@ -17,7 +17,7 @@
 
 inline uint32 GetTypeHash(const p::Id Value)
 {
-	return GetTypeHash(Value.GetRaw());
+	return GetTypeHash(Value.value);
 }
 
 
@@ -27,10 +27,10 @@ struct P_API FPipeId
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 Id = static_cast<int32>(p::NoId.GetRaw());
+	int32 Id = static_cast<int32>(p::NoId.value);
 
 	FPipeId() = default;
-	FPipeId(p::Id Id) : Id(static_cast<int32>(Id.GetRaw())) {}
+	FPipeId(p::Id Id) : Id(static_cast<int32>(Id.value)) {}
 
 	operator p::Id() const
 	{
