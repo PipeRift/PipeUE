@@ -48,7 +48,7 @@ bool UECSSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
 
 DEFINE_FUNCTION(UECSSubsystem::execGetComponent)
 {
-	P_GET_STRUCT_REF(FPipeEntityContext, Ctx);
+	P_GET_STRUCT_REF(FIdContext, Ctx);
 	P_GET_STRUCT(FPipeId, Id);
 
 	// Read wildcard Value input.
@@ -105,7 +105,7 @@ UECSSubsystem* UECSSubsystem::Get(const UObject* ContextObject)
 	return UECSSubsystem::Get(World);
 }
 
-FPipeEntityContext UECSSubsystem::GetMainContext(const UObject* ContextObject)
+FIdContext UECSSubsystem::GetMainContext(const UObject* ContextObject)
 {
 	return {Get(ContextObject)->GetContext()};
 }

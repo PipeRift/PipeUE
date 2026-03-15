@@ -16,7 +16,7 @@ class PIPE_API UECSSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 
-	p::EntityContext Ctx;
+	p::IdContext Ctx;
 
 	static p::TMap<UScriptStruct*, p::TypeId> StructsToTypeIds;
 
@@ -24,12 +24,12 @@ public:
 	void PostInitialize() override;
 	void Deinitialize() override;
 
-	p::EntityContext& GetContext()
+	p::IdContext& GetContext()
 	{
 		return Ctx;
 	}
 
-	const p::EntityContext& GetContext() const
+	const p::IdContext& GetContext() const
 	{
 		return Ctx;
 	}
@@ -38,8 +38,7 @@ protected:
 	bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	UFUNCTION(BlueprintCallable, CustomThunk, Category = "Pipe|ECS", meta = (CustomStructureParam = "Value"))
-	static UPARAM(DisplayName = "Exists") bool GetComponent(
-		const FPipeEntityContext& Ctx, FPipeId Id, int32& Value);
+	static UPARAM(DisplayName = "Exists") bool GetComponent(const FIdContext& Ctx, FPipeId Id, int32& Value);
 	DECLARE_FUNCTION(execGetComponent);
 
 public:
@@ -47,5 +46,5 @@ public:
 	static UECSSubsystem* Get(const UObject* ContextObject);
 
 	UFUNCTION(BlueprintPure, Category = "ECS", meta = (WorldContext = "ContextObject"))
-	static FPipeEntityContext GetMainContext(const UObject* ContextObject);
+	static FIdContext GetMainContext(const UObject* ContextObject);
 };

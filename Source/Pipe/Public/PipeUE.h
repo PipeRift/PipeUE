@@ -60,36 +60,36 @@ struct P_API FPipeId
 
 
 USTRUCT(BlueprintType)
-struct P_API FPipeEntityContext
+struct P_API FIdContext
 {
 	GENERATED_BODY()
 
-	p::EntityContext* Ctx = nullptr;
+	p::IdContext* Ctx = nullptr;
 
-	FPipeEntityContext() = default;
-	FPipeEntityContext(p::EntityContext& Ctx) : Ctx(&Ctx) {}
-	FPipeEntityContext(const FPipeEntityContext& Other) : Ctx(Other.Ctx) {}
-	FPipeEntityContext& operator=(const FPipeEntityContext& Other)
+	FIdContext() = default;
+	FIdContext(p::IdContext& Ctx) : Ctx(&Ctx) {}
+	FIdContext(const FIdContext& Other) : Ctx(Other.Ctx) {}
+	FIdContext& operator=(const FIdContext& Other)
 	{
 		Ctx = Other.Ctx;
 		return *this;
 	}
 
-	inline p::EntityContext& operator*() const
+	inline p::IdContext& operator*() const
 	{
 		return *Ctx;
 	}
-	inline p::EntityContext* operator->() const
+	inline p::IdContext* operator->() const
 	{
 		return Ctx;
 	}
 
-	bool operator==(const FPipeEntityContext& Other) const
+	bool operator==(const FIdContext& Other) const
 	{
 		return Ctx == Other.Ctx;
 	}
 
-	friend uint32 GetTypeHash(const FPipeEntityContext& Value)
+	friend uint32 GetTypeHash(const FIdContext& Value)
 	{
 		return GetTypeHash(Value.Ctx);
 	}

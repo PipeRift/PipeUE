@@ -1,4 +1,4 @@
-// Copyright 2015-2023 Piperift. All Rights Reserved.
+// Copyright 2015-2026 Piperift. All Rights Reserved.
 
 using UnrealBuildTool;
 using System.IO;
@@ -23,7 +23,8 @@ public class Pipe : ModuleRules
             "Core",
             "CoreUObject",
             "Engine",
-            "GameplayTags"
+            "GameplayTags",
+            "StateTreeModule"
         });
 
         if (!Directory.Exists(PipeTempPath))
