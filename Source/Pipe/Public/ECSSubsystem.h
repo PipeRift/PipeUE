@@ -38,7 +38,7 @@ protected:
 	bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
 
 	UFUNCTION(BlueprintCallable, CustomThunk, Category = "Pipe|ECS", meta = (CustomStructureParam = "Value"))
-	static UPARAM(DisplayName = "Exists") bool GetComponent(const FIdContext& Ctx, FPipeId Id, int32& Value);
+	static UPARAM(DisplayName = "Exists") bool GetComponent(const FIdContext& Ctx, FId Id, int32& Value);
 	DECLARE_FUNCTION(execGetComponent);
 
 public:

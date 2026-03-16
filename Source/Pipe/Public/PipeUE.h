@@ -22,15 +22,15 @@ inline uint32 GetTypeHash(const p::Id Value)
 
 
 USTRUCT(BlueprintType)
-struct P_API FPipeId
+struct P_API FId
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Id = static_cast<int32>(p::NoId.value);
 
-	FPipeId() = default;
-	FPipeId(p::Id Id) : Id(static_cast<int32>(Id.value)) {}
+	FId() = default;
+	FId(p::Id Id) : Id(static_cast<int32>(Id.value)) {}
 
 	operator p::Id() const
 	{
@@ -44,15 +44,15 @@ struct P_API FPipeId
 	{
 		return IsNone();
 	}
-	bool operator==(FPipeId Other) const
+	bool operator==(FId Other) const
 	{
 		return Id == Other.Id;
 	}
-	bool operator!=(FPipeId Other) const
+	bool operator!=(FId Other) const
 	{
 		return Id != Other.Id;
 	}
-	friend uint32 GetTypeHash(const FPipeId Value)
+	friend uint32 GetTypeHash(const FId Value)
 	{
 		return GetTypeHash(Value.Id);
 	}
@@ -199,11 +199,11 @@ namespace p
 		return p::LinearColor{Value.R, Value.G, Value.B, Value.A};
 	}
 
-	inline FPipeId ToUE(Id Value)
+	inline FId ToUE(Id Value)
 	{
 		return {Value};
 	}
-	inline Id FromUE(FPipeId Value)
+	inline Id FromUE(FId Value)
 	{
 		return Value;
 	}
@@ -487,20 +487,20 @@ class P_API UPipeLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 	UFUNCTION(BlueprintPure, Category = "Pipe|ECS")
-	static bool IsNone(FPipeId Id)
+	static bool IsNone(FId Id)
 	{
 		return Id.IsNone();
 	}
 
 	UFUNCTION(
 		BlueprintPure, meta = (DisplayName = "Equal (PipeId)", CompactNodeTitle = "=="), Category = "Pipe")
-	static bool EqualEqual_PipeId(const FPipeId& A, const FPipeId& B)
+	static bool EqualEqual_PipeId(const FId& A, const FId& B)
 	{
 		return A == B;
 	}
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Not Equal (PipeId)", CompactNodeTitle = "!="),
 		Category = "Pipe")
-	static bool NotEqual_PipeId(const FPipeId& A, const FPipeId& B)
+	static bool NotEqual_PipeId(const FId& A, const FId& B)
 	{
 		return A != B;
 	}

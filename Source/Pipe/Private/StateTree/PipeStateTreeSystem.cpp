@@ -8,12 +8,12 @@
 #include <StateTreeExecutionContext.h>
 
 
-void UPipeStateTreeSystem::AddOrSetStateTree(const FIdContext& Ctx, FPipeId Id, UStateTree* StateTree)
+void UPipeStateTreeSystem::AddOrSetStateTree(const FIdContext& Ctx, FId Id, UStateTree* StateTree)
 {
 	if (!Ctx->Has<CStateTree>(Id)) {}
 }
 
-void UPipeStateTreeSystem::RemoveStateTree(const FIdContext& Ctx, FPipeId Id) {}
+void UPipeStateTreeSystem::RemoveStateTree(const FIdContext& Ctx, FId Id) {}
 
 
 void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
@@ -34,6 +34,12 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 		FStateTreeExecutionContext ExecutionContext{
 			*GetTransientPackage(), *StateTree, Instance.InstanceData};
 		ExecutionContext.SetOuterTraceId(Id.value);
+		const FId IdStruct{Id};
+		if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
+		{
+			continue;
+		}
+
 		ExecutionContext.Stop();
 	}
 	Ctx->Remove<CStateTreeInstance>(MdfdIds);
@@ -48,6 +54,12 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 		FStateTreeExecutionContext ExecutionContext{
 			*GetTransientPackage(), *StateTree, Instance.InstanceData};
 		ExecutionContext.SetOuterTraceId(Id.value);
+		const FId IdStruct{Id};
+		if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
+		{
+			continue;
+		}
+
 		ExecutionContext.Start();
 		Instance.LastUpdateTimeInSeconds = TimeInSeconds;
 	}
@@ -60,6 +72,11 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 		FStateTreeExecutionContext ExecutionContext{
 			*GetTransientPackage(), *StateTree, Instance.InstanceData};
 		ExecutionContext.SetOuterTraceId(Id.value);
+		const FId IdStruct{Id};
+		if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
+		{
+			continue;
+		}
 
 		// Compute adjusted delta time
 		const float AdjustedDeltaTime = FloatCastChecked<float>(
@@ -84,4 +101,34 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 		}
 		// Tick State Tree
 	}
+}
+
+bool UPipeStateTreeSystem::SetContextRequirements(
+	const FIdContext& Ctx, const FId& Id, FStateTreeExecutionContext& StateTreeContext)
+{
+	if (!StateTreeContext.IsValid())
+	{
+		return false;
+	}
+
+	StateTreeContext.SetContextDataByName(UPipeECSStateTreeSchema::DataName_Context,
+		FStateTreeDataView(FStructView::Make(*const_cast<FIdContext*>(&Ctx))));
+	StateTreeContext.SetContextDataByName(UPipeECSStateTreeSchema::DataName_OwnerId,
+		FStateTreeDataView(FStructView::Make(*const_cast<FId*>(&Id))));
+
+	StateTreeContext.SetCollectExternalDataCallback(FOnCollectStateTreeExternalData::CreateLambda(
+		[](const FStateTreeExecutionContext& Context, const UStateTree* StateTree,
+			TArrayView<const FStateTreeExternalDataDesc> ExternalDescs,
+			TArrayView<FStateTreeDataView> OutDataViews) {
+			check(ExternalDescs.Num() == OutDataViews.Num());
+			for (int32 Index = 0; Index < ExternalDescs.Num(); Index++)
+			{
+				const FStateTreeExternalDataDesc& Desc = ExternalDescs[Index];
+				if (Desc.Struct != nullptr) {}
+			}
+
+			return true;
+		}));
+
+	return StateTreeContext.AreContextDataViewsValid();
 }

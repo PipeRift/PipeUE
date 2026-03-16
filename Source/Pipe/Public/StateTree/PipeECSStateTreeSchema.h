@@ -15,8 +15,11 @@ class PIPE_API UPipeECSStateTreeSchema : public UStateTreeSchema
 {
 	GENERATED_BODY()
 
+public:
+	static const FName DataName_Context;
 	static const FName DataName_OwnerId;
 
+private:
 	UPROPERTY()
 	TArray<FStateTreeExternalDataDesc> ContextDataDescs;
 

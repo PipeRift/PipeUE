@@ -49,7 +49,7 @@ bool UECSSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
 DEFINE_FUNCTION(UECSSubsystem::execGetComponent)
 {
 	P_GET_STRUCT_REF(FIdContext, Ctx);
-	P_GET_STRUCT(FPipeId, Id);
+	P_GET_STRUCT(FId, Id);
 
 	// Read wildcard Value input.
 	Stack.MostRecentPropertyAddress = nullptr;
