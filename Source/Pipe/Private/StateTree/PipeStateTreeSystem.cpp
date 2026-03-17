@@ -8,14 +8,6 @@
 #include <StateTreeExecutionContext.h>
 
 
-void UPipeStateTreeSystem::AddOrSetStateTree(const FIdContext& Ctx, FId Id, UStateTree* StateTree)
-{
-	if (!Ctx->Has<CStateTree>(Id)) {}
-}
-
-void UPipeStateTreeSystem::RemoveStateTree(const FIdContext& Ctx, FId Id) {}
-
-
 void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 {
 	UWorld* World = Ctx->GetStatic<TObjectPtr<UWorld>>();
@@ -25,48 +17,14 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 	}
 	const double TimeInSeconds = World->GetTimeSeconds();
 
-	p::TArray<p::Id> MdfdIds = p::FindAllIdsWith<p::CMdfd<CStateTree>, CStateTreeInstance>(*Ctx);
-	for (p::Id Id : MdfdIds)	// Removed state trees and modified (state tree changed) should stop
-	{
-		const UStateTree* StateTree = Ctx->Get<const p::CMdfd<CStateTree>>(Id).Last.StateTree;
-		auto& Instance = Ctx->Get<CStateTreeInstance>(Id);
-
-		FStateTreeExecutionContext ExecutionContext{
-			*GetTransientPackage(), *StateTree, Instance.InstanceData};
-		ExecutionContext.SetOuterTraceId(Id.value);
-		const FId IdStruct{Id};
-		if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
-		{
-			continue;
-		}
-
-		ExecutionContext.Stop();
-	}
-	Ctx->Remove<CStateTreeInstance>(MdfdIds);
-
-	// Modified state trees (not removed) will start again here
-	p::TArray<p::Id> AllIds = p::FindAllIdsWith<CStateTree>(*Ctx);
-	for (p::Id Id : p::FindIdsWithout<CStateTreeInstance>(*Ctx, AllIds))	// Initialized state trees
+	for (p::Id Id : p::FindAllIdsWith<CStateTree, CStateTreeInstance>(*Ctx))	// Tick
 	{
 		const UStateTree* StateTree = Ctx->Get<const CStateTree>(Id).StateTree;
-		auto& Instance = Ctx->Add<CStateTreeInstance>(Id);
-
-		FStateTreeExecutionContext ExecutionContext{
-			*GetTransientPackage(), *StateTree, Instance.InstanceData};
-		ExecutionContext.SetOuterTraceId(Id.value);
-		const FId IdStruct{Id};
-		if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
+		if (!IsValid(StateTree))
 		{
+			Ctx->Remove<CStateTree>(Id);	// State tree is invalid? remove it
 			continue;
 		}
-
-		ExecutionContext.Start();
-		Instance.LastUpdateTimeInSeconds = TimeInSeconds;
-	}
-
-	for (p::Id Id : AllIds)	   // Tick
-	{
-		const UStateTree* StateTree = Ctx->Get<const CStateTree>(Id).StateTree;
 		auto& Instance = Ctx->Get<CStateTreeInstance>(Id);
 
 		FStateTreeExecutionContext ExecutionContext{
@@ -101,6 +59,59 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 		}
 		// Tick State Tree
 	}
+
+	p::TArray<p::Id> MdfdIds = p::FindAllIdsWith<p::CMdfd<CStateTree>, CStateTreeInstance>(*Ctx);
+	for (p::Id Id : MdfdIds)	// Removed or changed state trees should stop
+	{
+		const UStateTree* LastStateTree = Ctx->Get<const p::CMdfd<CStateTree>>(Id).Last.StateTree;
+		auto* CurrStateTree = Ctx->TryGet<const CStateTree>(Id);
+		if (!CurrStateTree || CurrStateTree->StateTree != LastStateTree)
+		{
+			if (IsValid(LastStateTree))
+			{
+				auto& Instance = Ctx->Get<CStateTreeInstance>(Id);
+
+				FStateTreeExecutionContext ExecutionContext{
+					*GetTransientPackage(), *LastStateTree, Instance.InstanceData};
+				ExecutionContext.SetOuterTraceId(Id.value);
+				const FId IdStruct{Id};
+				if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
+				{
+					continue;
+				}
+
+				ExecutionContext.Stop();
+			}
+			Ctx->Remove<CStateTreeInstance>(Id);
+		}
+	}
+
+	// New state trees (or changed ones) will start here
+	p::TArray<p::Id> AllIds = p::FindAllIdsWith<CStateTree>(*Ctx);
+	for (p::Id Id : p::FindIdsWithout<CStateTreeInstance>(*Ctx, AllIds))	// Initialized state trees
+	{
+		const UStateTree* StateTree = Ctx->Get<const CStateTree>(Id).StateTree;
+		if (!IsValid(StateTree))
+		{
+			continue;
+		}
+		auto& Instance = Ctx->Add<CStateTreeInstance>(Id);
+
+		FStateTreeExecutionContext ExecutionContext{
+			*GetTransientPackage(), *StateTree, Instance.InstanceData};
+		ExecutionContext.SetOuterTraceId(Id.value);
+		const FId IdStruct{Id};
+		if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
+		{
+			Ctx->Remove<CStateTreeInstance>(Id);
+			continue;
+		}
+
+		ExecutionContext.Start();
+		Instance.LastUpdateTimeInSeconds = TimeInSeconds;
+	}
+
+	Ctx->ClearPool<p::CMdfd<CStateTree>>();
 }
 
 bool UPipeStateTreeSystem::SetContextRequirements(

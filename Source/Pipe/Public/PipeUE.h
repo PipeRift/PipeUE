@@ -220,7 +220,7 @@ namespace p
 		return MoveTemp(Results);
 	}
 	template <typename T, int32 N, typename U = decltype(ToUE(std::declval<const T&>()))>
-	inline ::TArray<U> ToUE(const p::TInlineArray<T, N>& Values)
+	inline ::TArray<U> ToUE(const p::TArray<T, N>& Values)
 	{
 		return ToUE(p::TView<T>{Values});
 	}

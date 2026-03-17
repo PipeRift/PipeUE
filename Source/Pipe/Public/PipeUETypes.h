@@ -7,7 +7,7 @@ class UStateTree;
 
 struct PIPE_API CStateTree
 {
-	P_STRUCT(CStateTree, p::TF_ECS_AutoModify | p::TF_ECS_StoreLastModified)
+	P_STRUCT(CStateTree, p::TF_ECS_ModifyOnEdit | p::TF_ECS_StoreLastModified)
 
 	TObjectPtr<UStateTree> StateTree;
 };

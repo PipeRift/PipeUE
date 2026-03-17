@@ -14,11 +14,10 @@ class PIPE_API UPipeStateTreeSystem : public UPipeECSSystem
 {
 	GENERATED_BODY()
 
-	static void AddOrSetStateTree(const FIdContext& Ctx, FId Id, UStateTree* StateTree);
-	static void RemoveStateTree(const FIdContext& Ctx, FId Id);
-
+public:
 	static void Update(const FIdContext& Ctx, float DeltaTime);
 
+private:
 	static bool SetContextRequirements(
 		const FIdContext& Ctx, const FId& Id, struct FStateTreeExecutionContext& STContext);
 };

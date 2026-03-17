@@ -32,6 +32,11 @@ bool UPipeECSStateTreeSchema::IsStructAllowed(const UScriptStruct* InScriptStruc
 		   InScriptStruct->IsChildOf(FStateTreePropertyFunctionCommonBase::StaticStruct());
 }
 
+bool UPipeECSStateTreeSchema::IsClassAllowed(const UClass* InClass) const
+{
+	return IsChildOfBlueprintBase(InClass);
+}
+
 bool UPipeECSStateTreeSchema::IsExternalItemAllowed(const UStruct& InStruct) const
 {
 	// Allow only WorldSubsystems and fragments as external data.
