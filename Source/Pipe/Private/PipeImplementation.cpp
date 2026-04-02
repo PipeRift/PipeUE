@@ -1,0 +1,35 @@
+// Copyright 2015-2026 Piperift. All Rights Reserved.
+
+// For convenience and easy access to the Pipe source code, we build it as part of this module.
+
+THIRD_PARTY_INCLUDES_START
+#include "Core/Broadcast.cpp"
+#include "Core/Checks.cpp"
+#include "Core/Guid.cpp"
+#include "Core/Hash.cpp"
+#include "Core/Log.cpp"
+#include "Core/String.cpp"
+#include "Core/StringView.cpp"
+#include "Core/Subprocess.cpp"
+#include "Core/Tag.cpp"
+#include "Files/Files.cpp"
+#include "Files/Paths.cpp"
+#include "Files/PlatformPaths.cpp"
+#include "Files/STDFileSystem.cpp"
+#include "Memory/MemoryStats.cpp"
+#include "Memory/OwnPtr.cpp"
+#include "Pipe.cpp"
+#include "Pipe/Extern/yyjson.c"
+#include "PipeAlgorithms.cpp"
+#include "PipeArrays.cpp"
+#include "PipeECS.cpp"
+#include "PipeFiles.cpp"
+#include "PipeMath.cpp"
+#include "PipeMemory.cpp"
+#include "PipeMemoryArenas.cpp"
+#include "PipePlatform.cpp"
+#include "PipeReflect.cpp"
+#include "PipeSerialize.cpp"
+#include "PipeTime.cpp"
+#include "PipeVectors.cpp"
+THIRD_PARTY_INCLUDES_END
