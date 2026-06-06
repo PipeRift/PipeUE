@@ -24,7 +24,8 @@ TSharedPtr<SWidget> FECSOutlinerMode::CreateContextMenu()
 	if (!ToolMenus->IsMenuRegistered(MenuName))
 	{
 		FToolMenuOwnerScoped ToolMenuOwnerScope(this);
-		if (UToolMenu* Menu = ToolMenus->RegisterMenu(MenuName)) {}
+		if (UToolMenu* Menu = ToolMenus->RegisterMenu(MenuName))
+		{}
 	}
 
 	FToolMenuContext Context;

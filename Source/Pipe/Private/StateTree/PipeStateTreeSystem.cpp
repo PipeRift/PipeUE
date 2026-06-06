@@ -135,7 +135,8 @@ bool UPipeStateTreeSystem::SetContextRequirements(
 			for (int32 Index = 0; Index < ExternalDescs.Num(); Index++)
 			{
 				const FStateTreeExternalDataDesc& Desc = ExternalDescs[Index];
-				if (Desc.Struct != nullptr) {}
+				if (Desc.Struct != nullptr)
+				{}
 			}
 
 			return true;
