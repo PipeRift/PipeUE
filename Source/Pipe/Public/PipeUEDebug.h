@@ -1,8 +1,10 @@
 // Copyright 2015-2026 Piperift. All Rights Reserved.
 #pragma once
 
-
 #ifdef P_DEBUG_TOOLS
+#	include <Misc/PipeDebug.h>
+#	include <Containers/UnrealString.h>
+
 namespace p
 {
 	void RegisterUnrealInspections()
