@@ -10,6 +10,12 @@
 #include <Toolkits/AssetEditorModeUILayer.h>
 #include <Widgets/DeclarativeSyntaxSupport.h>
 #include <Widgets/Docking/SDockTab.h>
+#include <ISceneOutliner.h>
+#include <SceneOutlinerModule.h>
+#include <Modules/ModuleManager.h>
+#include "ECS/ECSOutlinerMode.h"
+#include "ECS/SECSDetailsPanel.h"
+#include "ECS/EdModeECS.h"
 
 
 class SWidget;
@@ -29,6 +35,28 @@ void FEdModeECSToolkit::Init(
 	const TSharedPtr<class IToolkitHost>& InitToolkitHost, TWeakObjectPtr<UEdMode> InOwningMode)
 {
 	FModeToolkit::Init(InitToolkitHost, InOwningMode);
+	
+	FSceneOutlinerInitializationOptions InitOptions;
+	InitOptions.bShowHeaderRow = true;
+	InitOptions.bShowSearchBox = true;
+	InitOptions.bShowCreateNewFolder = false;
+	InitOptions.ModeFactory = FCreateSceneOutlinerMode::CreateLambda([this](SSceneOutliner* Outliner)
+	{
+		return new FECSOutlinerMode(Outliner, Cast<UEdModeECS>(GetEditorMode()));
+	});
+	
+	FSceneOutlinerModule& SceneOutlinerModule = FModuleManager::LoadModuleChecked<FSceneOutlinerModule>("SceneOutliner");
+	TSharedRef<ISceneOutliner> OutlinerWidget = SceneOutlinerModule.CreateSceneOutliner(InitOptions);
+	
+	FEdModeECSToolkit::Outliner = SNew(SBox)
+	[
+		OutlinerWidget
+	];
+	
+	FEdModeECSToolkit::Details = SNew(SBox)
+	[
+		SNew(SECSDetailsPanel, Cast<UEdModeECS>(GetEditorMode()))
+	];
 }
 
 FName FEdModeECSToolkit::GetToolkitFName() const
@@ -78,12 +106,12 @@ FText FEdModeECSToolkit::GetActiveToolMessage() const
 
 TSharedRef<SDockTab> SpawnTab_Outliner(const FSpawnTabArgs& Args, FEdModeECSToolkit* InToolkit)
 {
-	return SNew(SDockTab)[SAssignNew(FEdModeECSToolkit::Outliner, SBox)];
+	return SNew(SDockTab)[FEdModeECSToolkit::Outliner.ToSharedRef()];
 }
 
 TSharedRef<SDockTab> SpawnTab_Details(const FSpawnTabArgs& Args, FEdModeECSToolkit* InToolkit)
 {
-	return SNew(SDockTab)[SAssignNew(FEdModeECSToolkit::Details, SBox)];
+	return SNew(SDockTab)[FEdModeECSToolkit::Details.ToSharedRef()];
 }
 
 void FEdModeECSToolkit::RequestModeUITabs()

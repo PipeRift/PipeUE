@@ -23,7 +23,10 @@ public class PipeEditor : ModuleRules
             "Slate",
             "EditorFramework",
             "SceneOutliner",
-            "ToolMenus"
+            "ToolMenus",
+            "PropertyEditor",
+            "InputCore",
+            "LevelEditor"
         });
     }
 }

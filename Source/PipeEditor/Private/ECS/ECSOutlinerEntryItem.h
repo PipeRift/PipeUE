@@ -12,9 +12,10 @@ struct FECSOutlinerEntryItem : ISceneOutlinerTreeItem
 	static const FSceneOutlinerTreeItemType Type;
 
 	p::Id Id;
+	p::IdContext* Context;
 
 
-	FECSOutlinerEntryItem(p::Id Id);
+	FECSOutlinerEntryItem(p::Id Id, p::IdContext* Context = nullptr);
 
 	// Begin ISceneOutlinerTreeItem overrides
 	bool IsValid() const override;

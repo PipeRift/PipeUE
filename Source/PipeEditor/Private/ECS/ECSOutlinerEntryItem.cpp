@@ -6,6 +6,7 @@
 #include <PipeUE.h>
 #include <Widgets/Images/SImage.h>
 #include <Widgets/Text/SInlineEditableTextBlock.h>
+#include "ECSAuthoringComponents.h"
 
 
 #define LOCTEXT_NAMESPACE "ECSOutlinerTreeItem"
@@ -120,14 +121,15 @@ class SECSOutlinerEntrylabel : FSceneOutlinerCommonLabelData, public SCompoundWi
 };
 
 
-FECSOutlinerEntryItem::FECSOutlinerEntryItem(p::Id Id)
+FECSOutlinerEntryItem::FECSOutlinerEntryItem(p::Id Id, p::IdContext* Context)
 	: ISceneOutlinerTreeItem(FECSOutlinerEntryItem::Type)
 	, Id(Id)
+	, Context(Context)
 {}
 
 bool FECSOutlinerEntryItem::IsValid() const
 {
-	return Id != p::NoId;
+	return Id != p::NoId && Context != nullptr && Context->IsValid(Id);
 }
 
 FSceneOutlinerTreeItemID FECSOutlinerEntryItem::GetID() const
@@ -137,7 +139,14 @@ FSceneOutlinerTreeItemID FECSOutlinerEntryItem::GetID() const
 
 FString FECSOutlinerEntryItem::GetDisplayString() const
 {
-	return {};
+	if (Context && Context->IsValid(Id))
+	{
+		if (const CName* NameComp = Context->TryGet<CName>(Id))
+		{
+			return NameComp->Name.ToString();
+		}
+	}
+	return FString::Printf(TEXT("Entity %d"), Id);
 }
 
 TSharedRef<SWidget> FECSOutlinerEntryItem::GenerateLabelWidget(
@@ -155,14 +164,21 @@ FString FECSOutlinerEntryItem::GetPackageName() const
 
 void FECSOutlinerEntryItem::Rename(const FText& InNewName)
 {
-	// FScopedTransaction Transaction(LOCTEXT("RenameVariable", "Rename variable"));
-	// Entry->SetEntryName(FName(*InNewName.ToString()));
+	if (Context && Context->IsValid(Id))
+	{
+		// Add or update CName component
+		Context->Add<CName>(Id, CName{FName(*InNewName.ToString())});
+	}
 }
 
 bool FECSOutlinerEntryItem::ValidateName(const FText& InNewName, FText& OutErrorMessage) const
 {
-	OutErrorMessage = LOCTEXT("InvalidVariableError", "Names can not be changed (yet).");
-	return false;
+	if (InNewName.IsEmpty())
+	{
+		OutErrorMessage = LOCTEXT("EmptyNameError", "Name cannot be empty.");
+		return false;
+	}
+	return true;
 }
 
 #undef LOCTEXT_NAMESPACE	// "ECSOutlinerTreeItem"

@@ -1,13 +1,17 @@
 // Copyright 2015-2026 Piperift. All Rights Reserved.
 
 #include "ECS/ECSOutlinerMode.h"
+#include "ECS/ECSOutlinerHierarchy.h"
+#include "ECS/EdModeECS.h"
+#include "ECS/ECSEditorCommands.h"
+#include "ECSSubsystem.h"
 
 #include <ToolMenus.h>
 
-
 #define LOCTEXT_NAMESPACE "ECSOutlinerMode"
 
-FECSOutlinerMode::FECSOutlinerMode(SSceneOutliner* SceneOutliner) : ISceneOutlinerMode(SceneOutliner)
+FECSOutlinerMode::FECSOutlinerMode(SSceneOutliner* SceneOutliner, UEdModeECS* InOwningMode)
+	: ISceneOutlinerMode(SceneOutliner), OwningMode(InOwningMode)
 {
 	CommandList = MakeShared<FUICommandList>();
 }
@@ -79,10 +83,24 @@ TSharedPtr<FDragDropOperation> FECSOutlinerMode::CreateDragDropOperation(
 
 TUniquePtr<ISceneOutlinerHierarchy> FECSOutlinerMode::CreateHierarchy()
 {
-	return {};	  // MakeUnique<FECSOutlinerHierarchy>(this);
+	return MakeUnique<FECSOutlinerHierarchy>(this);
 }
 
-void FECSOutlinerMode::HandleItemSelection(const FSceneOutlinerItemSelection& Selection) {}
+void FECSOutlinerMode::HandleItemSelection(const FSceneOutlinerItemSelection& Selection)
+{
+	if (OwningMode)
+	{
+		OwningMode->SelectedEntities.Empty();
+		Selection.SelectedItems.Array().Remove(nullptr);
+		for (auto& Item : Selection.SelectedItems)
+		{
+			if (const FECSOutlinerEntryItem* EntryItem = Item->CastTo<FECSOutlinerEntryItem>())
+			{
+				OwningMode->SelectedEntities.Add(EntryItem->Id);
+			}
+		}
+	}
+}
 
 void FECSOutlinerMode::ResetOutlinerSelection()
 {

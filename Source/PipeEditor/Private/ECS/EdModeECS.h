@@ -3,6 +3,9 @@
 #pragma once
 
 #include <EdMode.h>
+#include <PipeECS.h>
+
+class UECSSubsystem;
 
 #include "EdModeECS.generated.h"
 
@@ -20,16 +23,30 @@ protected:
 
 	/** Command list lives here so that the key bindings on the commands can be processed in the viewport. */
 	TSharedPtr<FUICommandList> UICommandList;
+	TUniquePtr<FECSViewportProxyManager> ProxyManager;
 
-
+public:
 	UEdModeECS();
 
 	void Enter() override;
 	void Exit() override;
+	void Tick(FEditorViewportClient* ViewportClient, float DeltaTime) override;
 	bool UsesToolkits() const override
 	{
-		return false;
+		return true;
 	}
 
 	bool Select(AActor* InActor, bool bInSelected) override;
+
+	void BindCommands();
+
+	// ECS Operations
+	void CreateEntity();
+	void DeleteSelectedEntities();
+	void DuplicateSelectedEntities();
+
+	TArray<p::Id> SelectedEntities;
+
+	UECSSubsystem* GetECSSubsystem() const;
+
 };

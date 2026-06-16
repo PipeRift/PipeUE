@@ -21,6 +21,13 @@ void UECSSubsystem::PostInitialize()
 	Super::PostInitialize();
 	Ctx.SetStatic<UECSSubsystem*>(this);
 	Ctx.SetStatic<TObjectPtr<UWorld>>(GetWorld());
+	
+	// Register built-in authoring components
+	FECSComponentRegistry::Get().RegisterType<CName>(FText::FromString("Name"));
+	FECSComponentRegistry::Get().RegisterType<CTransform3D>(FText::FromString("Transform"));
+	FECSComponentRegistry::Get().RegisterType<CTag>(FText::FromString("Tag"));
+	FECSComponentRegistry::Get().RegisterType<p::CParent>(FText::FromString("Parent"));
+	FECSComponentRegistry::Get().RegisterType<p::CChild>(FText::FromString("Child"));
 }
 
 void UECSSubsystem::Deinitialize()
@@ -44,6 +51,79 @@ bool UECSSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
 			return true;
 	}
 	return false;
+}
+
+FId UECSSubsystem::CreateEntity()
+{
+	p::Id Id = p::AddId(Ctx);
+	OnEntityCreated.Broadcast(Id);
+	return Id;
+}
+
+FId UECSSubsystem::CreateEntityWithName(FName Name)
+{
+	p::Id Id = p::AddId(Ctx);
+	Ctx.Add(Id, CName{Name});
+	OnEntityCreated.Broadcast(Id);
+	return Id;
+}
+
+void UECSSubsystem::RemoveEntity(FId Id)
+{
+	if (Ctx.IsValid(Id))
+	{
+		OnEntityRemoved.Broadcast(Id);
+		p::RmId(Ctx, {&Id.Id, 1}, p::RmIdFlags::None);
+	}
+}
+
+int32 UECSSubsystem::GetEntityCount() const
+{
+	return Ctx.Size();
+}
+
+TArray<FId> UECSSubsystem::GetAllEntities() const
+{
+	TArray<FId> Entities;
+	Entities.Reserve(Ctx.Size());
+	Ctx.Each([&](p::Id Id)
+	{
+		Entities.Add(Id);
+	});
+	return Entities;
+}
+
+bool UECSSubsystem::HasComponent(FId Id, p::TypeId TypeId) const
+{
+	if (auto* Pool = Ctx.GetPool(TypeId))
+	{
+		return Pool->Has(Id);
+	}
+	return false;
+}
+
+void UECSSubsystem::AddComponentByType(FId Id, p::TypeId TypeId)
+{
+	if (auto* Pool = Ctx.GetPool(TypeId))
+	{
+		Pool->AddDefault(Id);
+		if (const FECSComponentTypeInfo* Info = FECSComponentRegistry::Get().FindByTypeId(TypeId))
+		{
+			BroadcastComponentChanged(Id, Info->Name);
+		}
+	}
+}
+
+void UECSSubsystem::RemoveComponentByType(FId Id, p::TypeId TypeId)
+{
+	if (auto* Pool = Ctx.GetPool(TypeId))
+	{
+		Pool->Remove(Id);
+		if (const FECSComponentTypeInfo* Info = FECSComponentRegistry::Get().FindByTypeId(TypeId))
+		{
+			BroadcastComponentChanged(Id, Info->Name);
+		}
+	}
 }
 
 DEFINE_FUNCTION(UECSSubsystem::execGetComponent)

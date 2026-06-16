@@ -5,13 +5,15 @@
 #include <ISceneOutlinerMode.h>
 
 
+class UEdModeECS;
+
 class PIPEEDITOR_API FECSOutlinerMode : public ISceneOutlinerMode
 {
 	TSharedPtr<FUICommandList> CommandList;
-
+	UEdModeECS* OwningMode = nullptr;
 
 public:
-	FECSOutlinerMode(class SSceneOutliner* SceneOutliner);
+	FECSOutlinerMode(class SSceneOutliner* SceneOutliner, UEdModeECS* InOwningMode);
 	FECSOutlinerMode();
 
 	// Begin ISceneOutlinerMode overrides
@@ -42,5 +44,5 @@ protected:
 
 	void ResetOutlinerSelection();
 
-	// SECSOutliner* GetOutliner() const;
+	UEdModeECS* GetOwningMode() const { return OwningMode; }
 };

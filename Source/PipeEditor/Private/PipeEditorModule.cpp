@@ -3,6 +3,7 @@
 #include "PipeEditorModule.h"
 
 #include "PipeEditorStyle.h"
+#include "ECS/ECSEditorCommands.h"
 
 #include <PropertyEditorModule.h>
 
@@ -15,10 +16,12 @@ DEFINE_LOG_CATEGORY(LogPipeEditor)
 void FPipeEditorModule::StartupModule()
 {
 	FPipeEditorStyle::Register();
+	FECSEditorCommands::Register();
 }
 
 void FPipeEditorModule::ShutdownModule()
 {
+	FECSEditorCommands::Unregister();
 	FPipeEditorStyle::Unregister();
 }
 
