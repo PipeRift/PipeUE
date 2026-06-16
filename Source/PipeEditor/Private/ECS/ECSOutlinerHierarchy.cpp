@@ -4,6 +4,7 @@
 
 #include "ECSOutlinerEntryItem.h"
 #include "ECSOutlinerMode.h"
+#include "ECSSubsystem.h"
 // #include "SECSOutlineView.h"
 
 #include <ISceneOutlinerMode.h>
@@ -25,10 +26,11 @@ void FECSOutlinerHierarchy::CreateItems(TArray<FSceneOutlinerTreeItemPtr>& OutIt
 					// Root entities only
 					if (!Ctx.Has<p::CChild>(Id))
 					{
-						if (FSceneOutlinerTreeItemPtr Item = Mode->CreateItemFor<FECSOutlinerEntryItem>(Id, &Ctx))
-						{
-							OutItems.Add(Item);
-						}
+					FSceneOutlinerTreeItemPtr Item = Mode->CreateItemFor<FECSOutlinerEntryItem>(Id);
+					if (Item.IsValid())
+					{
+						OutItems.Add(Item);
+					}
 					}
 				});
 			}
@@ -52,7 +54,8 @@ void FECSOutlinerHierarchy::CreateChildren(
 					{
 						for (p::Id ChildId : ParentComp->children)
 						{
-							if (FSceneOutlinerTreeItemPtr ChildItem = Mode->CreateItemFor<FECSOutlinerEntryItem>(ChildId, &Ctx))
+							FSceneOutlinerTreeItemPtr ChildItem = Mode->CreateItemFor<FECSOutlinerEntryItem>(ChildId);
+							if (ChildItem.IsValid())
 							{
 								OutChildren.Add(ChildItem);
 							}

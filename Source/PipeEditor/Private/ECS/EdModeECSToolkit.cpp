@@ -28,8 +28,6 @@ namespace
 	const TArray<FName> ECSPaletteNames = {ECSName};
 }	 // namespace
 
-TSharedPtr<SBox> FEdModeECSToolkit::Details = nullptr;
-TSharedPtr<SBox> FEdModeECSToolkit::Outliner = nullptr;
 
 void FEdModeECSToolkit::Init(
 	const TSharedPtr<class IToolkitHost>& InitToolkitHost, TWeakObjectPtr<UEdMode> InOwningMode)
@@ -40,22 +38,22 @@ void FEdModeECSToolkit::Init(
 	InitOptions.bShowHeaderRow = true;
 	InitOptions.bShowSearchBox = true;
 	InitOptions.bShowCreateNewFolder = false;
-	InitOptions.ModeFactory = FCreateSceneOutlinerMode::CreateLambda([this](SSceneOutliner* Outliner)
+	InitOptions.ModeFactory = FCreateSceneOutlinerMode::CreateLambda([this](SSceneOutliner* InOutliner)
 	{
-		return new FECSOutlinerMode(Outliner, Cast<UEdModeECS>(GetEditorMode()));
+		return new FECSOutlinerMode(InOutliner, Cast<UEdModeECS>(GetScriptableEditorMode().Get()));
 	});
 	
 	FSceneOutlinerModule& SceneOutlinerModule = FModuleManager::LoadModuleChecked<FSceneOutlinerModule>("SceneOutliner");
 	TSharedRef<ISceneOutliner> OutlinerWidget = SceneOutlinerModule.CreateSceneOutliner(InitOptions);
 	
-	FEdModeECSToolkit::Outliner = SNew(SBox)
+	Outliner = SNew(SBox)
 	[
 		OutlinerWidget
 	];
 	
-	FEdModeECSToolkit::Details = SNew(SBox)
+	Details = SNew(SBox)
 	[
-		SNew(SECSDetailsPanel, Cast<UEdModeECS>(GetEditorMode()))
+		SNew(SECSDetailsPanel, Cast<UEdModeECS>(GetScriptableEditorMode().Get()))
 	];
 }
 
@@ -104,36 +102,49 @@ FText FEdModeECSToolkit::GetActiveToolMessage() const
 	return FText{};	   // EditorWidget->GetActiveToolMessage();
 }
 
-TSharedRef<SDockTab> SpawnTab_Outliner(const FSpawnTabArgs& Args, FEdModeECSToolkit* InToolkit)
+TSharedRef<SDockTab> FEdModeECSToolkit::CreateOutlinerTab(const FSpawnTabArgs& Args)
 {
-	return SNew(SDockTab)[FEdModeECSToolkit::Outliner.ToSharedRef()];
+	return SNew(SDockTab)
+		.Label(LOCTEXT("ECSOutlinerTab", "Entity Outliner"))
+		[
+			Outliner.ToSharedRef()
+		];
 }
 
-TSharedRef<SDockTab> SpawnTab_Details(const FSpawnTabArgs& Args, FEdModeECSToolkit* InToolkit)
+TSharedRef<SDockTab> FEdModeECSToolkit::CreateDetailsTab(const FSpawnTabArgs& Args)
 {
-	return SNew(SDockTab)[FEdModeECSToolkit::Details.ToSharedRef()];
+	return SNew(SDockTab)
+		.Label(LOCTEXT("ECSDetailTab", "Entity Details"))
+		[
+			Details.ToSharedRef()
+		];
 }
 
 void FEdModeECSToolkit::RequestModeUITabs()
 {
+	FModeToolkit::RequestModeUITabs();
+
 	if (ModeUILayer.IsValid())
 	{
 		TSharedPtr<FAssetEditorModeUILayer> ModeUILayerPtr = ModeUILayer.Pin();
-		TSharedRef<FWorkspaceItem> MenuGroup = ModeUILayerPtr->GetModeMenuCategory().ToSharedRef();
 
 		FMinorTabConfig OutlinerTabInfo;
-		OutlinerTabInfo.OnSpawnTab = FOnSpawnTab::CreateStatic(&SpawnTab_Outliner, this);
+		OutlinerTabInfo.OnSpawnTab = FOnSpawnTab::CreateSP(
+			StaticCastSharedRef<FEdModeECSToolkit>(SharedThis(this)),
+			&FEdModeECSToolkit::CreateOutlinerTab);
 		OutlinerTabInfo.TabLabel = LOCTEXT("ECSOutlinerTab", "Entity Outliner");
 		OutlinerTabInfo.TabTooltip = LOCTEXT("ECSOutlinerTabTooltip", "List of entities");
 		ModeUILayerPtr->SetModePanelInfo(UAssetEditorUISubsystem::TopRightTabID, OutlinerTabInfo);
 
 		FMinorTabConfig DetailTabInfo;
-		DetailTabInfo.OnSpawnTab = FOnSpawnTab::CreateStatic(&SpawnTab_Details, this);
+		DetailTabInfo.OnSpawnTab = FOnSpawnTab::CreateSP(
+			StaticCastSharedRef<FEdModeECSToolkit>(SharedThis(this)),
+			&FEdModeECSToolkit::CreateDetailsTab);
 		DetailTabInfo.TabLabel = LOCTEXT("ECSDetailTab", "Entity Details");
 		DetailTabInfo.TabTooltip = LOCTEXT("ECSDetailTabTooltip", "Show entity components.");
 		ModeUILayerPtr->SetModePanelInfo(UAssetEditorUISubsystem::BottomRightTabID, DetailTabInfo);
 	}
-};
+}
 
 void FEdModeECSToolkit::InvokeUI()
 {

@@ -7,6 +7,8 @@
 
 class UECSSubsystem;
 
+#include "ECS/ECSViewportProxy.h"
+
 #include "EdModeECS.generated.h"
 
 
@@ -30,11 +32,13 @@ public:
 
 	void Enter() override;
 	void Exit() override;
-	void Tick(FEditorViewportClient* ViewportClient, float DeltaTime) override;
+	void ModeTick(float DeltaTime) override;
 	bool UsesToolkits() const override
 	{
 		return true;
 	}
+
+	void CreateToolkit() override;
 
 	bool Select(AActor* InActor, bool bInSelected) override;
 

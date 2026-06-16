@@ -15,7 +15,7 @@ class AActor;
 class FECSViewportProxyManager
 {
 	UEdModeECS* Mode = nullptr;
-	TMap<p::Id, AActor*> ProxyActors;
+	TMap<uint32, AActor*> ProxyActors;
 
 public:
 	FECSViewportProxyManager(UEdModeECS* InMode);

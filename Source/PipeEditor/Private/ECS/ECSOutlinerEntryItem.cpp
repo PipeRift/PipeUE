@@ -146,7 +146,7 @@ FString FECSOutlinerEntryItem::GetDisplayString() const
 			return NameComp->Name.ToString();
 		}
 	}
-	return FString::Printf(TEXT("Entity %d"), Id);
+	return FString::Printf(TEXT("Entity %u"), Id.value);
 }
 
 TSharedRef<SWidget> FECSOutlinerEntryItem::GenerateLabelWidget(

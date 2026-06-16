@@ -21,7 +21,7 @@ void UECSSubsystem::PostInitialize()
 	Super::PostInitialize();
 	Ctx.SetStatic<UECSSubsystem*>(this);
 	Ctx.SetStatic<TObjectPtr<UWorld>>(GetWorld());
-	
+
 	// Register built-in authoring components
 	FECSComponentRegistry::Get().RegisterType<CName>(FText::FromString("Name"));
 	FECSComponentRegistry::Get().RegisterType<CTransform3D>(FText::FromString("Transform"));
@@ -73,7 +73,8 @@ void UECSSubsystem::RemoveEntity(FId Id)
 	if (Ctx.IsValid(Id))
 	{
 		OnEntityRemoved.Broadcast(Id);
-		p::RmId(Ctx, {&Id.Id, 1}, p::RmIdFlags::None);
+		p::Id PipeId = Id;
+		p::RmId(Ctx, PipeId, p::RmIdFlags::None);
 	}
 }
 
@@ -86,8 +87,7 @@ TArray<FId> UECSSubsystem::GetAllEntities() const
 {
 	TArray<FId> Entities;
 	Entities.Reserve(Ctx.Size());
-	Ctx.Each([&](p::Id Id)
-	{
+	Ctx.Each([&](p::Id Id) {
 		Entities.Add(Id);
 	});
 	return Entities;

@@ -23,16 +23,20 @@ UEdModeECS::UEdModeECS()
 		true, 400);
 }
 
+void UEdModeECS::CreateToolkit()
+{
+	if (!UsesToolkits())
+	{
+		return;
+	}
+	check(!Toolkit.IsValid());
+	Toolkit = MakeShareable(new FEdModeECSToolkit);
+}
+
 void UEdModeECS::Enter()
 {
 	UEdMode::Enter();
 
-	if (!Toolkit.IsValid())
-	{
-		Toolkit = MakeShareable(new FEdModeECSToolkit);
-		Toolkit->Init(Owner->GetToolkitHost());
-	}
-	
 	ProxyManager = MakeUnique<FECSViewportProxyManager>(this);
 
 	BindCommands();
@@ -49,10 +53,8 @@ void UEdModeECS::Exit()
 	UEdMode::Exit();
 }
 
-void UEdModeECS::Tick(FEditorViewportClient* ViewportClient, float DeltaTime)
+void UEdModeECS::ModeTick(float DeltaTime)
 {
-	UEdMode::Tick(ViewportClient, DeltaTime);
-
 	if (ProxyManager)
 	{
 		ProxyManager->UpdateProxies();
@@ -100,7 +102,7 @@ void UEdModeECS::DeleteSelectedEntities()
 		for (p::Id Id : SelectedEntities)
 		{
 			FId UEId;
-			UEId.Id = Id;
+			UEId.Id = static_cast<int32>(Id.value);
 			Subsystem->RemoveEntity(UEId);
 		}
 		SelectedEntities.Empty();

@@ -13,8 +13,8 @@
 class FEdModeECSToolkit : public FModeToolkit
 {
 public:
-	static TSharedPtr<SBox> Details;
-	static TSharedPtr<SBox> Outliner;
+	TSharedPtr<SBox> Details;
+	TSharedPtr<SBox> Outliner;
 
 public:
 	/** Initializes the foliage mode toolkit */
@@ -39,4 +39,8 @@ public:
 	void RequestModeUITabs() override;
 
 	void InvokeUI() override;
+
+private:
+	TSharedRef<SDockTab> CreateOutlinerTab(const FSpawnTabArgs& Args);
+	TSharedRef<SDockTab> CreateDetailsTab(const FSpawnTabArgs& Args);
 };

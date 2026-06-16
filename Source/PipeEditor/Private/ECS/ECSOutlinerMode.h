@@ -36,13 +36,11 @@ public:
 	TSharedPtr<FDragDropOperation> CreateDragDropOperation(
 		const FPointerEvent& MouseEvent, const TArray<FSceneOutlinerTreeItemPtr>& InTreeItems) const override;
 
+	UEdModeECS* GetOwningMode() const { return OwningMode; }
+
 protected:
 	TUniquePtr<ISceneOutlinerHierarchy> CreateHierarchy() override;
-	// End ISceneOutlinerMode overrides
 
 	void HandleItemSelection(const FSceneOutlinerItemSelection& Selection);
-
 	void ResetOutlinerSelection();
-
-	UEdModeECS* GetOwningMode() const { return OwningMode; }
 };

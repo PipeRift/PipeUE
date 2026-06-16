@@ -31,16 +31,16 @@ void FECSViewportProxyManager::UpdateProxies()
 	p::IdContext& Ctx = Subsystem->GetContext();
 
 	// Sync proxies
-	TSet<p::Id> CurrentEntitiesWithTransform;
+	TSet<uint32> CurrentEntitiesWithTransform;
 
 	Ctx.Each([&](p::Id Id)
 	{
 		if (const CTransform3D* Transform = Ctx.TryGet<CTransform3D>(Id))
 		{
-			CurrentEntitiesWithTransform.Add(Id);
+			CurrentEntitiesWithTransform.Add(Id.value);
 			
 			AActor* ProxyActor = nullptr;
-			if (AActor** FoundProxy = ProxyActors.Find(Id))
+			if (AActor** FoundProxy = ProxyActors.Find(Id.value))
 			{
 				ProxyActor = *FoundProxy;
 			}
@@ -52,10 +52,10 @@ void FECSViewportProxyManager::UpdateProxies()
 				ProxyActor = World->SpawnActor<AActor>(SpawnParams);
 				
 #if WITH_EDITOR
-				ProxyActor->SetActorLabel(FString::Printf(TEXT("ECSProxy_%d"), Id));
+				ProxyActor->SetActorLabel(FString::Printf(TEXT("ECSProxy_%u"), Id.value));
 #endif
 				
-				ProxyActors.Add(Id, ProxyActor);
+				ProxyActors.Add(Id.value, ProxyActor);
 			}
 
 			if (ProxyActor)

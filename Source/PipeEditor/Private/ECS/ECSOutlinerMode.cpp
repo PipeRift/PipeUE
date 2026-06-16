@@ -91,12 +91,15 @@ void FECSOutlinerMode::HandleItemSelection(const FSceneOutlinerItemSelection& Se
 	if (OwningMode)
 	{
 		OwningMode->SelectedEntities.Empty();
-		Selection.SelectedItems.Array().Remove(nullptr);
+		Selection.SelectedItems.Remove(nullptr);
 		for (auto& Item : Selection.SelectedItems)
 		{
-			if (const FECSOutlinerEntryItem* EntryItem = Item->CastTo<FECSOutlinerEntryItem>())
+			if (TSharedPtr<ISceneOutlinerTreeItem> Pinned = Item.Pin())
 			{
-				OwningMode->SelectedEntities.Add(EntryItem->Id);
+				if (const FECSOutlinerEntryItem* EntryItem = Pinned->CastTo<FECSOutlinerEntryItem>())
+				{
+					OwningMode->SelectedEntities.Add(EntryItem->Id);
+				}
 			}
 		}
 	}

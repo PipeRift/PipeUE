@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "ECSAuthoringComponents.h"
 #include "PipeUE.h"
 
 #include <CoreMinimal.h>
@@ -10,7 +11,6 @@
 
 #include "ECSSubsystem.generated.h"
 
-#include "ECSAuthoringComponents.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEntityCreated, FId, EntityId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEntityRemoved, FId, EntityId);
