@@ -2,6 +2,8 @@
 
 #include "StateTree/PipeECSStateTreeSchema.h"
 
+#include "PipeUE.h"
+
 #include <StateTreeConditionBase.h>
 #include <StateTreeConsiderationBase.h>
 #include <StateTreeEvaluatorBase.h>
