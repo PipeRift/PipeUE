@@ -3,6 +3,7 @@
 #include "StateTree/PipeStateTreeSystem.h"
 
 #include "PipeUETypes.h"
+#include "StateTree/PipeECSStateTreeSchema.h"
 
 #include <StateTree.h>
 #include <StateTreeExecutionContext.h>

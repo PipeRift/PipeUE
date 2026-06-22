@@ -285,6 +285,8 @@ namespace p
 	P_API void Write(Writer& ct, const FVector2D& Val);
 	P_API void Read(Reader& ct, FVector& Val);
 	P_API void Write(Writer& ct, const FVector& Val);
+	P_API void Read(Reader& ct, FRotator& Val);
+	P_API void Write(Writer& ct, const FRotator& Val);
 	P_API void Read(Reader& ct, FVector4& Val);
 	P_API void Write(Writer& ct, const FVector4& Val);
 	P_API void Read(Reader& ct, FIntPoint& Val);

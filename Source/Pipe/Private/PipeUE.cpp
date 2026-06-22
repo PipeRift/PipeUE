@@ -143,6 +143,20 @@ namespace p
 		ct.Next("y", Val.Y);
 		ct.Next("z", Val.Z);
 	}
+	void Read(Reader& ct, FRotator& Val)
+	{
+		ct.BeginObject();
+		ct.Next("p", Val.Pitch);
+		ct.Next("y", Val.Yaw);
+		ct.Next("r", Val.Roll);
+	}
+	void Write(Writer& ct, const FRotator& Val)
+	{
+		ct.BeginObject();
+		ct.Next("p", Val.Pitch);
+		ct.Next("y", Val.Yaw);
+		ct.Next("r", Val.Roll);
+	}
 	void Read(Reader& ct, FVector4& Val)
 	{
 		ct.BeginObject();
@@ -286,4 +300,5 @@ P_NATIVE_NAMED(FVector, "UE::Vector3")
 P_NATIVE_NAMED(FVector4, "UE::Vector4")
 P_NATIVE_NAMED(FIntPoint, "UE::IntPoint")
 P_NATIVE_NAMED(FIntVector, "UE::IntVector")
+P_NATIVE_NAMED(FRotator, "UE::Rotator")
 #pragma endregion Unreal Types Support

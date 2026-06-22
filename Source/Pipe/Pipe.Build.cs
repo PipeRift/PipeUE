@@ -28,7 +28,8 @@ public class Pipe : ModuleRules
             "CoreUObject",
             "Engine",
             "GameplayTags",
-            "StateTreeModule"
+            "StateTreeModule",
+            "AssetRegistry"
         });
 
 
@@ -47,5 +48,11 @@ public class Pipe : ModuleRules
         PublicDefinitions.Add("PIPE_IMPORTS=1");
         PrivateDefinitions.Add("PIPE_EXPORTS=1");
         PublicDefinitions.Add("P_AUTOREGISTER_ENABLED=0");
+
+        if (Target.Platform == UnrealTargetPlatform.Win64)
+        {
+            bUseUnity = false;
+            PrivateDefinitions.Add("NOMINMAX");
+        }
     }
 }
