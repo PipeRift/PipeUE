@@ -16,6 +16,7 @@ public class Pipe : ModuleRules
 		bLegacyPublicIncludePaths = false;
 		CppCompileWarningSettings.ShadowVariableWarningLevel = WarningLevel.Error;
 		bTreatAsEngineModule = true;
+		bWarningsAsErrors = true;
 #endif
 
         PublicDependencyModuleNames.AddRange(new string[]

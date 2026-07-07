@@ -169,12 +169,13 @@ AActor* UPipeInstancedMeshSubsystem::FindOrCreatePoolActor()
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.ObjectFlags = RF_Transient;
-	SpawnParams.bHideFromSceneOutliner = true;
 
 	AActor* PoolActor = World->SpawnActor<AActor>(SpawnParams);
 	if (PoolActor)
 	{
+#if WITH_EDITOR
 		PoolActor->SetActorLabel(TEXT("PipeMeshPool"));
+#endif
 		PoolActor->SetActorHiddenInGame(false);
 		USceneComponent* Root = NewObject<USceneComponent>(PoolActor);
 		Root->SetFlags(RF_Transactional);

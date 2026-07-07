@@ -1,10 +1,10 @@
 // Copyright 2015-2026 Piperift. All Rights Reserved.
 #pragma once
 
+#include "PipeUE.h"
+
 #include <CoreMinimal.h>
 #include <StateTreeInstanceData.h>
-
-#include "PipeUE.h"
 
 class UStateTree;
 class UStaticMesh;
@@ -59,17 +59,17 @@ struct PIPE_API FCWorldTransform
 
 struct PIPE_API FCStaticMesh
 {
-	P_STRUCT(FCStaticMesh)
-	P_PROP(Asset, p::PF_Edit)
+	P_STRUCT(FCStaticMesh, p::TF_ECS_ModifyOnEdit)
 
+	P_PROP(Asset, p::PF_Edit)
 	TObjectPtr<UStaticMesh> Asset;
 };
 
 struct PIPE_API FCSkinnedMesh
 {
-	P_STRUCT(FCSkinnedMesh)
-	P_PROP(Asset, p::PF_Edit)
+	P_STRUCT(FCSkinnedMesh, p::TF_ECS_ModifyOnEdit)
 
+	P_PROP(Asset, p::PF_Edit)
 	TObjectPtr<USkeletalMesh> Asset;
 };
 
