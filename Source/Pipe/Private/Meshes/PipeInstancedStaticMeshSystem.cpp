@@ -3,6 +3,8 @@
 #include "Meshes/PipeInstancedMeshSubsystem.h"
 
 #include <Components/InstancedStaticMeshComponent.h>
+#include <Engine/SkeletalMesh.h>
+#include <Engine/StaticMesh.h>
 #include <PipeECS.h>
 
 

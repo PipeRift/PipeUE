@@ -327,7 +327,7 @@ namespace p
 		Read(ct, Id);
 		if (Id.IsValid())
 		{
-			Val = {GEngine->AssetManager->GetPrimaryAssetPath(Id)};
+			Val = {UAssetManager::Get().GetPrimaryAssetPath(Id)};
 		}
 		else
 		{
@@ -337,7 +337,7 @@ namespace p
 	template <typename T>
 	void Write(Writer& ct, const TSoftObjectPtr<T>& Val)
 	{
-		const FPrimaryAssetId Id = GEngine->AssetManager->GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
+		const FPrimaryAssetId Id = UAssetManager::Get().GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
 		Write(ct, Id);
 	}
 
@@ -348,7 +348,7 @@ namespace p
 		Read(ct, Id);
 		if (Id.IsValid())
 		{
-			Val = {GEngine->AssetManager->GetPrimaryAssetPath(Id)};
+			Val = {UAssetManager::Get().GetPrimaryAssetPath(Id)};
 		}
 		else
 		{
@@ -358,7 +358,7 @@ namespace p
 	template <typename T>
 	void Write(Writer& ct, const TSoftClassPtr<T>& Val)
 	{
-		const FPrimaryAssetId Id = GEngine->AssetManager->GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
+		const FPrimaryAssetId Id = UAssetManager::Get().GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
 		Write(ct, Id);
 	}
 
@@ -473,7 +473,7 @@ inline p::sizet GetHash(const FPrimaryAssetId& Value) noexcept
 }
 inline p::sizet GetHash(const FSoftObjectPath& Value) noexcept
 {
-	return GetHash(GEngine->AssetManager->GetPrimaryAssetIdForPath(Value));
+	return GetHash(UAssetManager::Get().GetPrimaryAssetIdForPath(Value));
 }
 template <typename T>
 inline p::sizet GetHash(const TSoftObjectPtr<T>& Value) noexcept
