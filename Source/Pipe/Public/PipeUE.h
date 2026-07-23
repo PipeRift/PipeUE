@@ -323,43 +323,81 @@ namespace p
 	template <typename T>
 	void Read(Reader& ct, TSoftObjectPtr<T>& Val)
 	{
-		FPrimaryAssetId Id;
-		Read(ct, Id);
-		if (Id.IsValid())
+		FPrimaryAssetType Type;
+		FString Path;
+		ct.BeginObject();
+		ct.Next("type", Type);
+		if (Type.IsValid())
 		{
-			Val = {UAssetManager::Get().GetPrimaryAssetPath(Id)};
+			FName Name;
+			ct.Next("name", Name);
+			Val = !Name.IsNone() ? UAssetManager::Get().GetPrimaryAssetPath({Type, Name}) : FSoftObjectPath{};
 		}
 		else
 		{
-			Val = {};
+			ct.Next("path", Path);
+			Val = FSoftObjectPath{Path};
 		}
 	}
 	template <typename T>
 	void Write(Writer& ct, const TSoftObjectPtr<T>& Val)
 	{
-		const FPrimaryAssetId Id = UAssetManager::Get().GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
-		Write(ct, Id);
+		FPrimaryAssetId Id;
+		if (!Val.IsNull())
+		{
+			Id = UAssetManager::Get().GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
+		}
+
+		ct.BeginObject();
+		ct.Next("type", Id.PrimaryAssetType);
+		if (Id.IsValid())
+		{
+			ct.Next("name", Id.PrimaryAssetName);
+		}
+		else
+		{
+			ct.Next("path", Val.ToSoftObjectPath().ToString());
+		}
 	}
 
 	template <typename T>
 	void Read(Reader& ct, TSoftClassPtr<T>& Val)
 	{
-		FPrimaryAssetId Id;
-		Read(ct, Id);
-		if (Id.IsValid())
+		ct.BeginObject();
+		FPrimaryAssetType Type;
+		ct.Next("type", Type);
+		if (Type.IsValid())
 		{
-			Val = {UAssetManager::Get().GetPrimaryAssetPath(Id)};
+			FName Name;
+			ct.Next("name", Name);
+			Val = !Name.IsNone() ? UAssetManager::Get().GetPrimaryAssetPath({Type, Name}) : FSoftObjectPath{};
 		}
 		else
 		{
-			Val = {};
+			FString Path;
+			ct.Next("path", Path);
+			Val = FSoftObjectPath{Path};
 		}
 	}
 	template <typename T>
 	void Write(Writer& ct, const TSoftClassPtr<T>& Val)
 	{
-		const FPrimaryAssetId Id = UAssetManager::Get().GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
-		Write(ct, Id);
+		FPrimaryAssetId Id;
+		if (!Val.IsNull())
+		{
+			Id = UAssetManager::Get().GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
+		}
+
+		ct.BeginObject();
+		ct.Next("type", Id.PrimaryAssetType);
+		if (Id.IsValid())
+		{
+			ct.Next("name", Id.PrimaryAssetName);
+		}
+		else
+		{
+			ct.Next("path", Val.ToSoftObjectPath().ToString());
+		}
 	}
 
 	template <typename T, typename Allocator>

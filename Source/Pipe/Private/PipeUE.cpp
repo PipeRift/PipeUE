@@ -230,15 +230,20 @@ namespace p
 
 	void Read(Reader& ct, UObject*& Val)
 	{
-		FPrimaryAssetId Id;
-		Read(ct, Id);
-		if (Id.IsValid())
+		ct.BeginObject();
+		FPrimaryAssetType Type;
+		ct.Next("type", Type);
+		if (Type.IsValid())
 		{
-			Val = GEngine->AssetManager->GetPrimaryAssetObject(Id);
+			FName Name;
+			ct.Next("name", Name);
+			Val = !Name.IsNone() ? UAssetManager::Get().GetPrimaryAssetObject({Type, Name}) : nullptr;
 		}
 		else
 		{
-			Val = {};
+			FString Path;
+			ct.Next("path", Path);
+			Val = FSoftObjectPath{Path}.TryLoad();
 		}
 	}
 	void Write(Writer& ct, const UObject* Val)
@@ -248,26 +253,55 @@ namespace p
 		{
 			Id = Val->GetPrimaryAssetId();
 		}
-		Write(ct, Id);
+
+		ct.BeginObject();
+		ct.Next("type", Id.PrimaryAssetType);
+		if (Id.IsValid())
+		{
+			ct.Next("name", Id.PrimaryAssetName);
+		}
+		else
+		{
+			ct.Next("path", FSoftObjectPath{Val}.ToString());
+		}
 	}
 
 	void Read(Reader& ct, FSoftObjectPtr& Val)
 	{
-		FPrimaryAssetId Id;
-		Read(ct, Id);
-		if (Id.IsValid())
+		ct.BeginObject();
+		FPrimaryAssetType Type;
+		ct.Next("type", Type);
+		if (Type.IsValid())
 		{
-			Val = {GEngine->AssetManager->GetPrimaryAssetPath(Id)};
+			FName Name;
+			ct.Next("name", Name);
+			Val = !Name.IsNone() ? UAssetManager::Get().GetPrimaryAssetPath({Type, Name}) : FSoftObjectPath{};
 		}
 		else
 		{
-			Val = {};
+			FString Path;
+			ct.Next("path", Path);
+			Val = FSoftObjectPath{Path};
 		}
 	}
 	void Write(Writer& ct, const FSoftObjectPtr& Val)
 	{
-		const FPrimaryAssetId Id = GEngine->AssetManager->GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
-		Write(ct, Id);
+		FPrimaryAssetId Id;
+		if (!Val.IsNull())
+		{
+			Id = UAssetManager::Get().GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
+		}
+
+		ct.BeginObject();
+		ct.Next("type", Id.PrimaryAssetType);
+		if (Id.IsValid())
+		{
+			ct.Next("name", Id.PrimaryAssetName);
+		}
+		else
+		{
+			ct.Next("path", Val.ToSoftObjectPath().ToString());
+		}
 	}
 
 
