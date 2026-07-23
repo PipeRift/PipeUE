@@ -115,6 +115,22 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 	Ctx->ClearPool<p::CMdfd<CStateTree>>();
 }
 
+void UPipeStateTreeSystem::AddECSReferencedObjects(p::IdContext& Ctx, FReferenceCollector& Collector)
+{
+	p::TIdScope<p::Writes<CStateTree, CStateTreeInstance>> Scope{Ctx};
+	// Keep UStateTree assets alive
+	for (p::Id Id : p::FindAllIdsWith<CStateTree>(Scope))
+	{
+		Collector.AddReferencedObject(Scope.Get<CStateTree>(Id).StateTree);
+	}
+
+	// Keep FStateTreeInstanceData's internal UObject references alive
+	for (p::Id Id : p::FindAllIdsWith<CStateTreeInstance>(Scope))
+	{
+		Scope.Get<CStateTreeInstance>(Id).InstanceData.AddStructReferencedObjects(Collector);
+	}
+}
+
 bool UPipeStateTreeSystem::SetContextRequirements(
 	const FIdContext& Ctx, const FId& Id, FStateTreeExecutionContext& StateTreeContext)
 {

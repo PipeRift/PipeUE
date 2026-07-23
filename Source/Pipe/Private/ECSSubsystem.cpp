@@ -3,10 +3,13 @@
 #include "ECSSubsystem.h"
 
 #include "PipeUE.h"
+#include "StateTree/PipeStateTreeSystem.h"
 
 #include <Blueprint/BlueprintExceptionInfo.h>
 #include <Engine/Engine.h>
 #include <Engine/World.h>
+#include <UObject/Object.h>
+
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(ECSSubsystem)
 
@@ -108,5 +111,13 @@ UECSSubsystem* UECSSubsystem::Get(const UObject* ContextObject)
 FIdContext UECSSubsystem::GetMainContext(const UObject* ContextObject)
 {
 	return {Get(ContextObject)->GetContext()};
+}
+
+void UECSSubsystem::AddReferencedObjects(UObject* InThis, FReferenceCollector& Collector)
+{
+	Super::AddReferencedObjects(InThis, Collector);
+
+	UECSSubsystem* This = CastChecked<UECSSubsystem>(InThis);
+	UPipeStateTreeSystem::AddECSReferencedObjects(This->Ctx, Collector);
 }
 #undef LOCTEXT_NAMESPACE

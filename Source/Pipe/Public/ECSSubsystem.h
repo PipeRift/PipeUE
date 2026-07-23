@@ -24,6 +24,8 @@ public:
 	void PostInitialize() override;
 	void Deinitialize() override;
 
+	static void AddReferencedObjects(UObject* InThis, FReferenceCollector& Collector);
+
 	p::IdContext& GetContext()
 	{
 		return Ctx;
