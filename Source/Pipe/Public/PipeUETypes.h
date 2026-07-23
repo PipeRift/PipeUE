@@ -1,9 +1,7 @@
 // Copyright 2015-2026 Piperift. All Rights Reserved.
 #pragma once
 
-#include "PipeUE.h"
-
-#include <CoreMinimal.h>
+#include <PipeReflect.h>
 #include <StateTreeInstanceData.h>
 
 class UStateTree;

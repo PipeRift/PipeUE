@@ -1,6 +1,12 @@
 // Copyright 2015-2026 Piperift. All Rights Reserved.
 #pragma once
 
+// Prevent Windows GetObject macro (wingdi.h) from expanding TScriptInterface::GetObject
+// used by PropertyBindingUtils → StateTreeModule
+#ifdef GetObject
+#undef GetObject
+#endif
+
 #include <Containers/UnrealString.h>
 #include <Engine/AssetManager.h>
 #include <GameplayTagContainer.h>

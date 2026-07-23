@@ -53,7 +53,14 @@ public class Pipe : ModuleRules
 
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
+            // Unity build merges files in non-obvious order; .gen.cpp files run before PipeUE.h,
+            // so PropertyBindingUtils (transitively via StateTreeModule) hits the Windows GetObject→GetObjectW macro.
+            // Disable unity build so each .cpp independently includes PipeUE.h which undefs the macro first.
             bUseUnity = false;
+
+            // Windows.h macros clash with C++ stdlib and UE APIs.
+            // NOMINMAX: prevents min/max macros (std::numeric_limits::max)
+            // GetObject undef via PipeUE.h (TScriptInterface::GetObject)
             PrivateDefinitions.Add("NOMINMAX");
         }
     }
