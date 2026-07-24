@@ -2,16 +2,15 @@
 
 #pragma once
 
+#include "PipeECSSystem.h"
 #include "PipeUE.h"
 
 #include <CoreMinimal.h>
 #include <PipeECS.h>
+#include <Subsystems/SubsystemCollection.h>
 #include <Subsystems/WorldSubsystem.h>
 
 #include "ECSSubsystem.generated.h"
-
-
-class UPipeECSSystem;
 
 
 UCLASS(Blueprintable, DisplayName = "ECS")
@@ -23,7 +22,7 @@ class PIPE_API UECSSubsystem : public UWorldSubsystem
 
 	static p::TMap<UScriptStruct*, p::TypeId> StructsToTypeIds;
 
-	TArray<TSoftClassPtr<UPipeECSSystem>> Systems;
+	FObjectSubsystemCollection<UPipeECSSystem> SubsystemCollection;
 
 public:
 	void PostInitialize() override;

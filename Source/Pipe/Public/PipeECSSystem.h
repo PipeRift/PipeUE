@@ -4,7 +4,7 @@
 
 #include "PipeUE.h"
 
-#include <UObject/Object.h>
+#include <Subsystems/Subsystem.h>
 
 #include "PipeECSSystem.generated.h"
 
@@ -15,7 +15,7 @@ class FReferenceCollector;
  * Functions are expected to be static or const (CDO) only.
  */
 UCLASS()
-class PIPE_API UPipeECSSystem : public UObject
+class PIPE_API UPipeECSSystem : public USubsystem
 {
 	GENERATED_BODY()
 

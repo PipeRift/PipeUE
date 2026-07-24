@@ -2,7 +2,6 @@
 
 #include "ECSSubsystem.h"
 
-#include "PipeECSSystem.h"
 #include "PipeUE.h"
 
 #include <Blueprint/BlueprintExceptionInfo.h>
@@ -25,16 +24,12 @@ void UECSSubsystem::PostInitialize()
 	Ctx.SetStatic<UECSSubsystem*>(this);
 	Ctx.SetStatic<TObjectPtr<UWorld>>(GetWorld());
 
-	TArray<UClass*> Classes;
-	GetDerivedClasses(UPipeECSSystem::StaticClass(), Classes);
-	for (UClass* Class : Classes)
-	{
-		Systems.Add(TSoftClassPtr<UPipeECSSystem>(Class));
-	}
+	SubsystemCollection.Initialize(this);
 }
 
 void UECSSubsystem::Deinitialize()
 {
+	SubsystemCollection.Deinitialize();
 	Super::Deinitialize();
 	Ctx.RemoveStatic<TObjectPtr<UWorld>>();
 	Ctx.RemoveStatic<UECSSubsystem*>();
@@ -125,13 +120,10 @@ void UECSSubsystem::AddReferencedObjects(UObject* InThis, FReferenceCollector& C
 	Super::AddReferencedObjects(InThis, Collector);
 
 	UECSSubsystem* This = CastChecked<UECSSubsystem>(InThis);
-	for (const auto& SystemPtr : This->Systems)
-	{
-		if (const UPipeECSSystem* System =
-				SystemPtr.IsValid() ? SystemPtr.Get()->GetDefaultObject<UPipeECSSystem>() : nullptr)
-		{
-			System->AddECSReferencedObjects(This->Ctx, Collector);
-		}
-	}
+	This->SubsystemCollection.AddReferencedObjects(This, Collector);
+
+	This->SubsystemCollection.ForEachSubsystem([&This, &Collector](UPipeECSSystem* System) {
+		System->AddECSReferencedObjects(This->Ctx, Collector);
+	});
 }
 #undef LOCTEXT_NAMESPACE
