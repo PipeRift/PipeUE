@@ -20,8 +20,15 @@ struct PIPE_API CStateTree
 	TObjectPtr<UStateTree> StateTree;
 };
 
+struct PIPE_API CStateTreeRunning
+{
+	P_STRUCT(CStateTreeRunning, p::TF_NotSerialized)
+};
+
 struct PIPE_API CStateTreeInstance
 {
+	P_STRUCT(CStateTreeInstance, p::TF_NotSerialized)
+
 	FStateTreeInstanceData InstanceData;
 
 	/** The last update time use to calculate ticking delta time. */

@@ -15,7 +15,7 @@
 
 #define LOCTEXT_NAMESPACE "ECS"
 
-p::TMap<UScriptStruct*, p::TypeId> UECSSubsystem::StructsToTypeIds{};
+p::TMap<const UScriptStruct*, p::TypeId> UECSSubsystem::StructsToTypeIds{};
 
 
 void UECSSubsystem::PostInitialize()

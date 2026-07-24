@@ -20,7 +20,7 @@ class PIPE_API UECSSubsystem : public UWorldSubsystem
 
 	p::IdContext Ctx;
 
-	static p::TMap<UScriptStruct*, p::TypeId> StructsToTypeIds;
+	static p::TMap<const UScriptStruct*, p::TypeId> StructsToTypeIds;
 
 	FObjectSubsystemCollection<UPipeECSSystem> SubsystemCollection;
 
@@ -48,6 +48,11 @@ protected:
 	DECLARE_FUNCTION(execGetComponent);
 
 public:
+	static const p::TypeId* FindComponentTypeId(const UScriptStruct* Struct)
+	{
+		return StructsToTypeIds.Find(Struct);
+	}
+
 	static UECSSubsystem* Get(const UWorld* World);
 	static UECSSubsystem* Get(const UObject* ContextObject);
 

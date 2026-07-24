@@ -41,8 +41,7 @@ bool UPipeECSStateTreeSchema::IsClassAllowed(const UClass* InClass) const
 
 bool UPipeECSStateTreeSchema::IsExternalItemAllowed(const UStruct& InStruct) const
 {
-	// Allow only WorldSubsystems and fragments as external data.
-	return true;
+	return InStruct.IsA<UScriptStruct>();
 }
 
 TConstArrayView<FStateTreeExternalDataDesc> UPipeECSStateTreeSchema::GetContextDataDescs() const
