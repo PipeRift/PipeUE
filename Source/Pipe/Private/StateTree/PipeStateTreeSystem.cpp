@@ -115,7 +115,7 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 	Ctx->ClearPool<p::CMdfd<CStateTree>>();
 }
 
-void UPipeStateTreeSystem::AddECSReferencedObjects(p::IdContext& Ctx, FReferenceCollector& Collector)
+void UPipeStateTreeSystem::AddECSReferencedObjects(p::IdContext& Ctx, FReferenceCollector& Collector) const
 {
 	p::TIdScope<p::Writes<CStateTree, CStateTreeInstance>> Scope{Ctx};
 	// Keep UStateTree assets alive

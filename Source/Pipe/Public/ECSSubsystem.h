@@ -11,6 +11,9 @@
 #include "ECSSubsystem.generated.h"
 
 
+class UPipeECSSystem;
+
+
 UCLASS(Blueprintable, DisplayName = "ECS")
 class PIPE_API UECSSubsystem : public UWorldSubsystem
 {
@@ -19,6 +22,8 @@ class PIPE_API UECSSubsystem : public UWorldSubsystem
 	p::IdContext Ctx;
 
 	static p::TMap<UScriptStruct*, p::TypeId> StructsToTypeIds;
+
+	TArray<TSoftClassPtr<UPipeECSSystem>> Systems;
 
 public:
 	void PostInitialize() override;

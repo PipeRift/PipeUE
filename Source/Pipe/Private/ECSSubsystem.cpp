@@ -2,8 +2,8 @@
 
 #include "ECSSubsystem.h"
 
+#include "PipeECSSystem.h"
 #include "PipeUE.h"
-#include "StateTree/PipeStateTreeSystem.h"
 
 #include <Blueprint/BlueprintExceptionInfo.h>
 #include <Engine/Engine.h>
@@ -24,6 +24,13 @@ void UECSSubsystem::PostInitialize()
 	Super::PostInitialize();
 	Ctx.SetStatic<UECSSubsystem*>(this);
 	Ctx.SetStatic<TObjectPtr<UWorld>>(GetWorld());
+
+	TArray<UClass*> Classes;
+	GetDerivedClasses(UPipeECSSystem::StaticClass(), Classes);
+	for (UClass* Class : Classes)
+	{
+		Systems.Add(TSoftClassPtr<UPipeECSSystem>(Class));
+	}
 }
 
 void UECSSubsystem::Deinitialize()
@@ -118,6 +125,13 @@ void UECSSubsystem::AddReferencedObjects(UObject* InThis, FReferenceCollector& C
 	Super::AddReferencedObjects(InThis, Collector);
 
 	UECSSubsystem* This = CastChecked<UECSSubsystem>(InThis);
-	UPipeStateTreeSystem::AddECSReferencedObjects(This->Ctx, Collector);
+	for (const auto& SystemPtr : This->Systems)
+	{
+		if (const UPipeECSSystem* System =
+				SystemPtr.IsValid() ? SystemPtr.Get()->GetDefaultObject<UPipeECSSystem>() : nullptr)
+		{
+			System->AddECSReferencedObjects(This->Ctx, Collector);
+		}
+	}
 }
 #undef LOCTEXT_NAMESPACE

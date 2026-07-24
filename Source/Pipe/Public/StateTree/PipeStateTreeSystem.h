@@ -17,7 +17,7 @@ class PIPE_API UPipeStateTreeSystem : public UPipeECSSystem
 public:
 	static void Update(const FIdContext& Ctx, float DeltaTime);
 
-	static void AddECSReferencedObjects(p::IdContext& Ctx, class FReferenceCollector& Collector);
+	void AddECSReferencedObjects(p::IdContext& Ctx, class FReferenceCollector& Collector) const override;
 
 private:
 	static bool SetContextRequirements(

@@ -2,6 +2,8 @@
 
 #include "PipeECSSystem.h"
 
+#include <Engine/Engine.h>
+
 
 int32 UPipeECSSystem::GetFunctionCallspace(UFunction* Function, FFrame* Stack)
 {
