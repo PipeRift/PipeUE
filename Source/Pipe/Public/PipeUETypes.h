@@ -3,7 +3,6 @@
 
 #include "PipeUE.h"
 
-#include <CoreMinimal.h>
 #include <StateTreeInstanceData.h>
 
 class UStateTree;

@@ -5,7 +5,6 @@
 #include "PipeECSSystem.h"
 #include "PipeUE.h"
 
-#include <CoreMinimal.h>
 #include <PipeECS.h>
 #include <Subsystems/SubsystemCollection.h>
 #include <Subsystems/WorldSubsystem.h>

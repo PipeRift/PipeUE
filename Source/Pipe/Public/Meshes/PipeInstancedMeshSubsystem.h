@@ -1,10 +1,9 @@
 // Copyright 2015-2026 Piperift. All Rights Reserved.
 #pragma once
 
-#include <CoreMinimal.h>
-#include <Subsystems/WorldSubsystem.h>
-
 #include "PipeUETypes.h"
+
+#include <Subsystems/WorldSubsystem.h>
 
 #include "PipeInstancedMeshSubsystem.generated.h"
 

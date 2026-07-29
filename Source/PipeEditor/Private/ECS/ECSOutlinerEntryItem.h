@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include "ISceneOutlinerTreeItem.h"
-
+#include <ISceneOutlinerTreeItem.h>
 #include <PipeECS.h>
 
 

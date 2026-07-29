@@ -15,7 +15,8 @@ namespace p::details
 			RequiredClass = UObject::StaticClass();
 		}
 
-		IAssetRegistry& AssetRegistry = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry")).Get();
+		IAssetRegistry& AssetRegistry =
+			FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry")).Get();
 
 		FARFilter Filter;
 		Filter.ClassPaths.Add(RequiredClass->GetClassPathName());
@@ -55,7 +56,8 @@ namespace p::details
 			return p::FromUE(DisplayName + TEXT(" (") + AssetData.GetObjectPathString() + TEXT(")"));
 		}
 
-		return p::FromUE(AssetData.AssetName.ToString() + TEXT(" (") + AssetData.GetObjectPathString() + TEXT(")"));
+		return p::FromUE(
+			AssetData.AssetName.ToString() + TEXT(" (") + AssetData.GetObjectPathString() + TEXT(")"));
 	}
 
 	String GetObjectDisplayName(UObject* Object)

@@ -43,7 +43,7 @@ void UPipeInstancedMeshSubsystem::Deinitialize()
 bool UPipeInstancedMeshSubsystem::DoesSupportWorldType(EWorldType::Type WorldType) const
 {
 	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE ||
-		WorldType == EWorldType::EditorPreview || WorldType == EWorldType::GamePreview;
+		   WorldType == EWorldType::EditorPreview || WorldType == EWorldType::GamePreview;
 }
 
 int32 UPipeInstancedMeshSubsystem::EnsureStaticMeshGroup(UStaticMesh* Mesh)
@@ -64,8 +64,7 @@ int32 UPipeInstancedMeshSubsystem::EnsureStaticMeshGroup(UStaticMesh* Mesh)
 		return INDEX_NONE;
 	}
 
-	UInstancedStaticMeshComponent* ISMC =
-		NewObject<UInstancedStaticMeshComponent>(PoolActor);
+	UInstancedStaticMeshComponent* ISMC = NewObject<UInstancedStaticMeshComponent>(PoolActor);
 	ISMC->SetStaticMesh(Mesh);
 	ISMC->SetFlags(RF_Transactional);
 	ISMC->SetupAttachment(PoolActor->GetRootComponent());
