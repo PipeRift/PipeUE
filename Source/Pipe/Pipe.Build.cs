@@ -16,6 +16,7 @@ public class Pipe : ModuleRules
 		bLegacyPublicIncludePaths = false;
 		CppCompileWarningSettings.ShadowVariableWarningLevel = WarningLevel.Error;
 		bTreatAsEngineModule = true;
+		bWarningsAsErrors = true;
 #endif
 
         PublicDependencyModuleNames.AddRange(new string[]
@@ -28,7 +29,8 @@ public class Pipe : ModuleRules
             "CoreUObject",
             "Engine",
             "GameplayTags",
-            "StateTreeModule"
+            "StateTreeModule",
+            "AssetRegistry"
         });
 
 
@@ -44,8 +46,9 @@ public class Pipe : ModuleRules
         PublicDefinitions.Add(string.Format("P_DEBUG={0}", bIsDebug ? 1 : 0));
         PublicDefinitions.Add(string.Format("P_RELEASE={0}", bIsDebug ? 0 : 1));
 
-        PublicDefinitions.Add("PIPE_IMPORTS=1");
-        PrivateDefinitions.Add("PIPE_EXPORTS=1");
+        bool bIsMonolithic = Target.LinkType == TargetLinkType.Monolithic;
+        PublicDefinitions.Add(string.Format("PIPE_IMPORTS={0}", bIsMonolithic ? 0 : 1));
+        PrivateDefinitions.Add(string.Format("PIPE_EXPORTS={0}", bIsMonolithic ? 0 : 1));
         PublicDefinitions.Add("P_AUTOREGISTER_ENABLED=0");
 
         if (Target.Platform == UnrealTargetPlatform.Win64)

@@ -1,10 +1,16 @@
 // Copyright 2015-2026 Piperift. All Rights Reserved.
 #pragma once
 
-#include <PipeReflect.h>
+#include "PipeUE.h"
+
 #include <StateTreeInstanceData.h>
 
 class UStateTree;
+class UStaticMesh;
+class USkeletalMesh;
+class UAnimInstance;
+
+#pragma region StateTree
 
 struct PIPE_API CStateTree
 {
@@ -13,10 +19,64 @@ struct PIPE_API CStateTree
 	TObjectPtr<UStateTree> StateTree;
 };
 
+struct PIPE_API CStateTreeRunning
+{
+	P_STRUCT(CStateTreeRunning, p::TF_NotSerialized)
+};
+
 struct PIPE_API CStateTreeInstance
 {
+	P_STRUCT(CStateTreeInstance, p::TF_NotSerialized)
+
 	FStateTreeInstanceData InstanceData;
 
 	/** The last update time use to calculate ticking delta time. */
 	double LastUpdateTimeInSeconds = 0.;
 };
+
+#pragma endregion StateTree
+
+
+#pragma region Transform
+
+struct PIPE_API FCWorldTransform
+{
+	P_STRUCT(FCWorldTransform, p::TF_ECS_ModifyOnEdit)
+
+	P_PROP(Location, p::PF_Edit)
+	FVector Location = FVector::ZeroVector;
+
+	P_PROP(Rotation, p::PF_Edit)
+	FRotator Rotation = FRotator::ZeroRotator;
+
+	P_PROP(Scale, p::PF_Edit)
+	FVector Scale = FVector::OneVector;
+
+	FTransform ToTransform() const
+	{
+		return FTransform(Rotation, Location, Scale);
+	}
+};
+
+#pragma endregion Transform
+
+
+#pragma region Meshes
+
+struct PIPE_API FCStaticMesh
+{
+	P_STRUCT(FCStaticMesh, p::TF_ECS_ModifyOnEdit)
+
+	P_PROP(Asset, p::PF_Edit)
+	TObjectPtr<UStaticMesh> Asset;
+};
+
+struct PIPE_API FCSkinnedMesh
+{
+	P_STRUCT(FCSkinnedMesh, p::TF_ECS_ModifyOnEdit)
+
+	P_PROP(Asset, p::PF_Edit)
+	TObjectPtr<USkeletalMesh> Asset;
+};
+
+#pragma endregion Meshes

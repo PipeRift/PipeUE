@@ -2,10 +2,11 @@
 
 #pragma once
 
+#include "PipeECSSystem.h"
 #include "PipeUE.h"
 
-#include <CoreMinimal.h>
 #include <PipeECS.h>
+#include <Subsystems/SubsystemCollection.h>
 #include <Subsystems/WorldSubsystem.h>
 
 #include "ECSSubsystem.generated.h"
@@ -18,11 +19,15 @@ class PIPE_API UECSSubsystem : public UWorldSubsystem
 
 	p::IdContext Ctx;
 
-	static p::TMap<UScriptStruct*, p::TypeId> StructsToTypeIds;
+	static p::TMap<const UScriptStruct*, p::TypeId> StructsToTypeIds;
+
+	FObjectSubsystemCollection<UPipeECSSystem> SubsystemCollection;
 
 public:
 	void PostInitialize() override;
 	void Deinitialize() override;
+
+	static void AddReferencedObjects(UObject* InThis, FReferenceCollector& Collector);
 
 	p::IdContext& GetContext()
 	{
@@ -42,6 +47,11 @@ protected:
 	DECLARE_FUNCTION(execGetComponent);
 
 public:
+	static const p::TypeId* FindComponentTypeId(const UScriptStruct* Struct)
+	{
+		return StructsToTypeIds.Find(Struct);
+	}
+
 	static UECSSubsystem* Get(const UWorld* World);
 	static UECSSubsystem* Get(const UObject* ContextObject);
 

@@ -291,6 +291,8 @@ namespace p
 	P_API void Write(Writer& ct, const FVector2D& Val);
 	P_API void Read(Reader& ct, FVector& Val);
 	P_API void Write(Writer& ct, const FVector& Val);
+	P_API void Read(Reader& ct, FRotator& Val);
+	P_API void Write(Writer& ct, const FRotator& Val);
 	P_API void Read(Reader& ct, FVector4& Val);
 	P_API void Write(Writer& ct, const FVector4& Val);
 	P_API void Read(Reader& ct, FIntPoint& Val);
@@ -327,43 +329,81 @@ namespace p
 	template <typename T>
 	void Read(Reader& ct, TSoftObjectPtr<T>& Val)
 	{
-		FPrimaryAssetId Id;
-		Read(ct, Id);
-		if (Id.IsValid())
+		FPrimaryAssetType Type;
+		FString Path;
+		ct.BeginObject();
+		ct.Next("type", Type);
+		if (Type.IsValid())
 		{
-			Val = {GEngine->AssetManager->GetPrimaryAssetPath(Id)};
+			FName Name;
+			ct.Next("name", Name);
+			Val = !Name.IsNone() ? UAssetManager::Get().GetPrimaryAssetPath({Type, Name}) : FSoftObjectPath{};
 		}
 		else
 		{
-			Val = {};
+			ct.Next("path", Path);
+			Val = FSoftObjectPath{Path};
 		}
 	}
 	template <typename T>
 	void Write(Writer& ct, const TSoftObjectPtr<T>& Val)
 	{
-		const FPrimaryAssetId Id = GEngine->AssetManager->GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
-		Write(ct, Id);
+		FPrimaryAssetId Id;
+		if (!Val.IsNull())
+		{
+			Id = UAssetManager::Get().GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
+		}
+
+		ct.BeginObject();
+		ct.Next("type", Id.PrimaryAssetType);
+		if (Id.IsValid())
+		{
+			ct.Next("name", Id.PrimaryAssetName);
+		}
+		else
+		{
+			ct.Next("path", Val.ToSoftObjectPath().ToString());
+		}
 	}
 
 	template <typename T>
 	void Read(Reader& ct, TSoftClassPtr<T>& Val)
 	{
-		FPrimaryAssetId Id;
-		Read(ct, Id);
-		if (Id.IsValid())
+		ct.BeginObject();
+		FPrimaryAssetType Type;
+		ct.Next("type", Type);
+		if (Type.IsValid())
 		{
-			Val = {GEngine->AssetManager->GetPrimaryAssetPath(Id)};
+			FName Name;
+			ct.Next("name", Name);
+			Val = !Name.IsNone() ? UAssetManager::Get().GetPrimaryAssetPath({Type, Name}) : FSoftObjectPath{};
 		}
 		else
 		{
-			Val = {};
+			FString Path;
+			ct.Next("path", Path);
+			Val = FSoftObjectPath{Path};
 		}
 	}
 	template <typename T>
 	void Write(Writer& ct, const TSoftClassPtr<T>& Val)
 	{
-		const FPrimaryAssetId Id = GEngine->AssetManager->GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
-		Write(ct, Id);
+		FPrimaryAssetId Id;
+		if (!Val.IsNull())
+		{
+			Id = UAssetManager::Get().GetPrimaryAssetIdForPath(Val.ToSoftObjectPath());
+		}
+
+		ct.BeginObject();
+		ct.Next("type", Id.PrimaryAssetType);
+		if (Id.IsValid())
+		{
+			ct.Next("name", Id.PrimaryAssetName);
+		}
+		else
+		{
+			ct.Next("path", Val.ToSoftObjectPath().ToString());
+		}
 	}
 
 	template <typename T, typename Allocator>
@@ -477,7 +517,7 @@ inline p::sizet GetHash(const FPrimaryAssetId& Value) noexcept
 }
 inline p::sizet GetHash(const FSoftObjectPath& Value) noexcept
 {
-	return GetHash(GEngine->AssetManager->GetPrimaryAssetIdForPath(Value));
+	return GetHash(UAssetManager::Get().GetPrimaryAssetIdForPath(Value));
 }
 template <typename T>
 inline p::sizet GetHash(const TSoftObjectPtr<T>& Value) noexcept

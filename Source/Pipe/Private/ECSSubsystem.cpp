@@ -7,13 +7,15 @@
 #include <Blueprint/BlueprintExceptionInfo.h>
 #include <Engine/Engine.h>
 #include <Engine/World.h>
+#include <UObject/Object.h>
+
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(ECSSubsystem)
 
 
 #define LOCTEXT_NAMESPACE "ECS"
 
-p::TMap<UScriptStruct*, p::TypeId> UECSSubsystem::StructsToTypeIds{};
+p::TMap<const UScriptStruct*, p::TypeId> UECSSubsystem::StructsToTypeIds{};
 
 
 void UECSSubsystem::PostInitialize()
@@ -21,10 +23,13 @@ void UECSSubsystem::PostInitialize()
 	Super::PostInitialize();
 	Ctx.SetStatic<UECSSubsystem*>(this);
 	Ctx.SetStatic<TObjectPtr<UWorld>>(GetWorld());
+
+	SubsystemCollection.Initialize(this);
 }
 
 void UECSSubsystem::Deinitialize()
 {
+	SubsystemCollection.Deinitialize();
 	Super::Deinitialize();
 	Ctx.RemoveStatic<TObjectPtr<UWorld>>();
 	Ctx.RemoveStatic<UECSSubsystem*>();
@@ -108,5 +113,17 @@ UECSSubsystem* UECSSubsystem::Get(const UObject* ContextObject)
 FIdContext UECSSubsystem::GetMainContext(const UObject* ContextObject)
 {
 	return {Get(ContextObject)->GetContext()};
+}
+
+void UECSSubsystem::AddReferencedObjects(UObject* InThis, FReferenceCollector& Collector)
+{
+	Super::AddReferencedObjects(InThis, Collector);
+
+	UECSSubsystem* This = CastChecked<UECSSubsystem>(InThis);
+	This->SubsystemCollection.AddReferencedObjects(This, Collector);
+
+	This->SubsystemCollection.ForEachSubsystem([&This, &Collector](UPipeECSSystem* System) {
+		System->AddECSReferencedObjects(This->Ctx, Collector);
+	});
 }
 #undef LOCTEXT_NAMESPACE

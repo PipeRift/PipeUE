@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "ISceneOutlinerHierarchy.h"
+#include <ISceneOutlinerHierarchy.h>
 
 
 class FECSOutlinerHierarchy : public ISceneOutlinerHierarchy

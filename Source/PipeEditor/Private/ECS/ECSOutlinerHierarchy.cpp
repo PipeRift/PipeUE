@@ -3,7 +3,6 @@
 #include "ECSOutlinerHierarchy.h"
 
 #include "ECSOutlinerEntryItem.h"
-#include "ECSOutlinerMode.h"
 // #include "SECSOutlineView.h"
 
 #include <ISceneOutlinerMode.h>
