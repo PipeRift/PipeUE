@@ -50,6 +50,7 @@ public class Pipe : ModuleRules
         PublicDefinitions.Add(string.Format("PIPE_IMPORTS={0}", bIsMonolithic ? 0 : 1));
         PrivateDefinitions.Add(string.Format("PIPE_EXPORTS={0}", bIsMonolithic ? 0 : 1));
         PublicDefinitions.Add("P_AUTOREGISTER_ENABLED=0");
+        PublicDefinitions.Add("P_OVERRIDE_NEWDELETE=0");
 
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {

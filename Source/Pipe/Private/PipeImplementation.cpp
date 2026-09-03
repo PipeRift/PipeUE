@@ -8,7 +8,6 @@ THIRD_PARTY_INCLUDES_START
 #include "Core/Guid.cpp"
 #include "Core/Hash.cpp"
 #include "Core/Log.cpp"
-#include "Core/String.cpp"
 #include "Core/StringView.cpp"
 #include "Core/Subprocess.cpp"
 #include "Core/Tag.cpp"
@@ -30,6 +29,7 @@ THIRD_PARTY_INCLUDES_START
 #include "PipePlatform.cpp"
 #include "PipeReflect.cpp"
 #include "PipeSerialize.cpp"
+#include "PipeStrings.cpp"
 #include "PipeTime.cpp"
 #include "PipeVectors.cpp"
 THIRD_PARTY_INCLUDES_END

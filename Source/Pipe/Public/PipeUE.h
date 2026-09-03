@@ -13,7 +13,7 @@
 #include <Kismet/BlueprintFunctionLibrary.h>
 #include <Math/IntPoint.h>
 #include <Math/Vector.h>
-#include <Pipe/Core/String.h>
+#include <PipeStrings.h>
 #include <PipeColor.h>
 #include <PipeECS.h>
 #include <PipeVectors.h>
