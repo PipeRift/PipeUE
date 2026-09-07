@@ -2,6 +2,7 @@
 
 using UnrealBuildTool;
 using System.IO;
+using System.Text.RegularExpressions;
 
 
 public class Pipe : ModuleRules
@@ -51,6 +52,20 @@ public class Pipe : ModuleRules
         PrivateDefinitions.Add(string.Format("PIPE_EXPORTS={0}", bIsMonolithic ? 0 : 1));
         PublicDefinitions.Add("P_AUTOREGISTER_ENABLED=0");
         PublicDefinitions.Add("P_OVERRIDE_NEWDELETE=0");
+
+        // Get pipe version from plugin version
+        string PluginVersion = "0.0";
+        string UpluginPath = Path.Combine(ModuleDirectory, "../../Pipe.uplugin");
+        if (File.Exists(UpluginPath))
+        {
+            string UpluginContent = File.ReadAllText(UpluginPath);
+            var VersionMatch = Regex.Match(UpluginContent, "\"VersionName\"\\s*:\\s*\"([^\"]+)\"");
+            if (VersionMatch.Success)
+            {
+                PluginVersion = VersionMatch.Groups[1].Value;
+            }
+        }
+        PublicDefinitions.Add(string.Format("P_VERSION={0}", PluginVersion));
 
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {

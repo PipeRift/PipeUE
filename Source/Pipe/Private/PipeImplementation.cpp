@@ -30,6 +30,7 @@ THIRD_PARTY_INCLUDES_START
 #include "PipeReflect.cpp"
 #include "PipeSerialize.cpp"
 #include "PipeStrings.cpp"
+#include "PipeTest.cpp"
 #include "PipeTime.cpp"
-#include "PipeVectors.cpp"
+#include "PipeType.cpp"
 THIRD_PARTY_INCLUDES_END

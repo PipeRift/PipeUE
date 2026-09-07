@@ -4,7 +4,7 @@
 // Prevent Windows GetObject macro (wingdi.h) from expanding TScriptInterface::GetObject
 // used by PropertyBindingUtils → StateTreeModule
 #ifdef GetObject
-#undef GetObject
+#	undef GetObject
 #endif
 
 #include <Containers/UnrealString.h>
@@ -13,10 +13,10 @@
 #include <Kismet/BlueprintFunctionLibrary.h>
 #include <Math/IntPoint.h>
 #include <Math/Vector.h>
-#include <PipeStrings.h>
 #include <PipeColor.h>
 #include <PipeECS.h>
-#include <PipeVectors.h>
+#include <PipeMath.h>
+#include <PipeStrings.h>
 
 #include "PipeUE.generated.h"
 
