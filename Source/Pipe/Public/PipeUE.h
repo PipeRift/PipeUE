@@ -58,6 +58,9 @@ struct P_API FId
 	{
 		return Id != Other.Id;
 	}
+
+	FString ToString() const;
+
 	friend uint32 GetTypeHash(const FId Value)
 	{
 		return GetTypeHash(Value.Id);

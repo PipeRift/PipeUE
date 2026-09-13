@@ -5,6 +5,26 @@
 #include <GameplayTagContainer.h>
 
 
+FString FId::ToString() const
+{
+	// Mirror of p::ToString(p::Id)
+	const p::Id IdValue = *this;
+	if (IdValue == p::NoId)
+	{
+		return TEXT("NoId");
+	}
+
+	if (auto Version = IdValue.GetVersion(); Version > 0)
+	{
+		return FString::Printf(TEXT("%d:%d"), IdValue.GetIndex(), Version);
+	}
+	else
+	{
+		return FString::Printf(TEXT("%d"), IdValue.GetIndex());
+	}
+}
+
+
 #pragma region Unreal Serialization Support
 namespace p
 {
