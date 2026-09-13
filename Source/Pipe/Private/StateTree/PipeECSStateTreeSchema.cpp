@@ -1,5 +1,6 @@
 // Copyright 2015-2026 Piperift. All Rights Reserved.
 
+#include "StateTree/PipeECSStateTreePropertyFunctionBase.h"
 #include "StateTree/PipeECSStateTreeSchema.h"
 
 #include "PipeUE.h"
@@ -31,7 +32,8 @@ bool UPipeECSStateTreeSchema::IsStructAllowed(const UScriptStruct* InScriptStruc
 		   InScriptStruct->IsChildOf(FStateTreeEvaluatorCommonBase::StaticStruct()) ||
 		   InScriptStruct->IsChildOf(FStateTreeTaskCommonBase::StaticStruct()) ||
 		   InScriptStruct->IsChildOf(FStateTreeConsiderationCommonBase::StaticStruct()) ||
-		   InScriptStruct->IsChildOf(FStateTreePropertyFunctionCommonBase::StaticStruct());
+		   InScriptStruct->IsChildOf(FStateTreePropertyFunctionCommonBase::StaticStruct()) ||
+		   InScriptStruct->IsChildOf(FStateTreePropertyFunctionPipeECSBase::StaticStruct());
 }
 
 bool UPipeECSStateTreeSchema::IsClassAllowed(const UClass* InClass) const
