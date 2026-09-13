@@ -26,12 +26,13 @@ public class Pipe : ModuleRules
 
         PrivateDependencyModuleNames.AddRange(new string[]
         {
+            "AIModule",
+            "AssetRegistry",
             "Core",
             "CoreUObject",
             "Engine",
             "GameplayTags",
-            "StateTreeModule",
-            "AssetRegistry"
+            "StateTreeModule"
         });
 
 

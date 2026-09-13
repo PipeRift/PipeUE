@@ -80,3 +80,42 @@ struct PIPE_API FStateTreeIsIdNonePropertyFunction : public FStateTreePropertyFu
 		const IStateTreeBindingLookup& BindingLookup, EStateTreeNodeFormatting Formatting) const override;
 #endif
 };
+
+
+USTRUCT()
+struct FStateTreeEqualsIdPropertyFunctionInstanceData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	FId Left;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	FId Right;
+
+	UPROPERTY(EditAnywhere, Category = Output)
+	bool bAreEqual = false;
+};
+
+/**
+ * Check if two entity Ids are equal.
+ */
+USTRUCT(meta = (DisplayName = "Equals (FId)", Category = "Id"))
+struct PIPE_API FStateTreeEqualsIdPropertyFunction : public FStateTreePropertyFunctionPipeECSBase
+{
+	GENERATED_BODY()
+
+	using FInstanceDataType = FStateTreeEqualsIdPropertyFunctionInstanceData;
+
+	virtual const UStruct* GetInstanceDataType() const override
+	{
+		return FInstanceDataType::StaticStruct();
+	}
+
+	virtual void Execute(FStateTreeExecutionContext& Context) const override;
+
+#if WITH_EDITOR
+	virtual FText GetDescription(const FGuid& ID, FStateTreeDataView InstanceDataView,
+		const IStateTreeBindingLookup& BindingLookup, EStateTreeNodeFormatting Formatting) const override;
+#endif
+};

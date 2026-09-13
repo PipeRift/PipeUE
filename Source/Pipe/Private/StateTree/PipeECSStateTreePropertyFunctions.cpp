@@ -26,6 +26,13 @@ void FStateTreeIsIdNonePropertyFunction::Execute(FStateTreeExecutionContext& Con
 	InstanceData.bIsNone = InstanceData.Input.IsNone();
 }
 
+void FStateTreeEqualsIdPropertyFunction::Execute(FStateTreeExecutionContext& Context) const
+{
+	FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
+
+	InstanceData.bAreEqual = InstanceData.Left == InstanceData.Right;
+}
+
 
 #if WITH_EDITOR
 FText FStateTreeIsIdValidPropertyFunction::GetDescription(const FGuid& ID,
@@ -41,6 +48,30 @@ FText FStateTreeIsIdNonePropertyFunction::GetDescription(const FGuid& ID, FState
 {
 	return UE::StateTree::DescHelpers::GetDescriptionForSingleParameterFunc<FInstanceDataType>(
 		LOCTEXT("StateTreeIsIdNone", "IsNone"), ID, InstanceDataView, BindingLookup, Formatting);
+}
+
+FText FStateTreeEqualsIdPropertyFunction::GetDescription(const FGuid& ID, FStateTreeDataView InstanceDataView,
+	const IStateTreeBindingLookup& BindingLookup, EStateTreeNodeFormatting Formatting) const
+{
+	const FInstanceDataType& InstanceData = InstanceDataView.Get<FInstanceDataType>();
+
+	const FText LeftValue = BindingLookup.GetBindingSourceDisplayName(
+		FPropertyBindingPath(ID, GET_MEMBER_NAME_CHECKED(FInstanceDataType, Left)), Formatting);
+	const FText RightValue = BindingLookup.GetBindingSourceDisplayName(
+		FPropertyBindingPath(ID, GET_MEMBER_NAME_CHECKED(FInstanceDataType, Right)), Formatting);
+
+	const FText Left = LeftValue.IsEmpty()
+						   ? UE::StateTree::DescHelpers::GetText(InstanceData.Left, Formatting)
+						   : LeftValue;
+	const FText Right = RightValue.IsEmpty()
+							? UE::StateTree::DescHelpers::GetText(InstanceData.Right, Formatting)
+							: RightValue;
+
+	const FText Format = (Formatting == EStateTreeNodeFormatting::RichText)
+						   ? LOCTEXT("EqualsIdRich", "<s>Equals</>({Left}, {Right})")
+						   : LOCTEXT("EqualsId", "Equals({Left}, {Right})");
+
+	return FText::FormatNamed(Format, TEXT("Left"), Left, TEXT("Right"), Right);
 }
 #endif	  // WITH_EDITOR
 
