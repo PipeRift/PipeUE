@@ -9,14 +9,27 @@
 #include <StateTreeConditionBase.h>
 #include <StateTreeConsiderationBase.h>
 #include <StateTreeEvaluatorBase.h>
+#include <StateTreeExecutionContext.h>
 #include <StateTreePropertyFunctionBase.h>
 #include <StateTreeTaskBase.h>
+#include <StructUtils/StructView.h>
 
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(PipeECSStateTreeSchema)
 
 const FName UPipeECSStateTreeSchema::DataName_Context{TEXT("Context")};
 const FName UPipeECSStateTreeSchema::DataName_OwnerId{TEXT("OwnerId")};
+
+
+namespace p
+{
+	const FIdContext& GetIdContext(FStateTreeExecutionContext& Context)
+	{
+		const FStateTreeDataView View =
+			Context.GetContextDataByName(UPipeECSStateTreeSchema::DataName_Context);
+		return View.Get<FIdContext>();
+	}
+}	 // namespace p
 
 
 UPipeECSStateTreeSchema::UPipeECSStateTreeSchema()

@@ -2,9 +2,19 @@
 
 #pragma once
 
+#include "PipeUE.h"
+
 #include <StateTreeSchema.h>
 
 #include "PipeECSStateTreeSchema.generated.h"
+
+struct FStateTreeExecutionContext;
+
+
+namespace p
+{
+	const FIdContext& PIPE_API GetIdContext(FStateTreeExecutionContext& Context);
+}
 
 
 /**
