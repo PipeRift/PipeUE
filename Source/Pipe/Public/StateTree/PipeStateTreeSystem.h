@@ -36,5 +36,5 @@ public:
 
 private:
 	static bool SetContextRequirements(
-		const FIdContext& Ctx, const FId& Id, struct FStateTreeExecutionContext& STContext);
+		FIdContext& Ctx, FId& Id, struct FStateTreeExecutionContext& STContext);
 };

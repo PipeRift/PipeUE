@@ -35,8 +35,9 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 		auto& Instance = Ctx->Get<CStateTreeInstance>(Id);
 
 		FStateTreeExecutionContext ExecutionContext{*ECSSystem, *StateTree, Instance.InstanceData};
-		const FId IdStruct{Id};
-		if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
+		FIdContext MutableCtx{*Ctx};
+		FId MutableId{Id};
+		if (!SetContextRequirements(MutableCtx, MutableId, ExecutionContext))
 		{
 			continue;
 		}
@@ -74,12 +75,13 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 		{
 			if (auto* Instance = Ctx->TryGet<CStateTreeInstance>(Id))
 			{
-if (IsValid(LastStateTree))
+				if (IsValid(LastStateTree))
 				{
 					FStateTreeExecutionContext ExecutionContext{
 						*ECSSystem, *LastStateTree, Instance->InstanceData};
-					const FId IdStruct{Id};
-					if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
+					FIdContext MutableCtx{*Ctx};
+					FId MutableId{Id};
+					if (!SetContextRequirements(MutableCtx, MutableId, ExecutionContext))
 					{
 						continue;
 					}
@@ -117,10 +119,10 @@ if (IsValid(LastStateTree))
 		}
 		auto& Instance = Ctx->GetOrAdd<CStateTreeInstance>(Id);
 
-		FStateTreeExecutionContext ExecutionContext{
-			*ECSSystem, *StateTree, Instance.InstanceData};
-		const FId IdStruct{Id};
-		if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
+		FStateTreeExecutionContext ExecutionContext{*ECSSystem, *StateTree, Instance.InstanceData};
+		FIdContext MutableCtx{*Ctx};
+		FId MutableId{Id};
+		if (!SetContextRequirements(MutableCtx, MutableId, ExecutionContext))
 		{
 			continue;
 		}
@@ -194,28 +196,26 @@ void UPipeStateTreeSystem::AddECSReferencedObjects(p::IdContext& Ctx, FReference
 }
 
 bool UPipeStateTreeSystem::SetContextRequirements(
-	const FIdContext& Ctx, const FId& Id, FStateTreeExecutionContext& StateTreeContext)
+	FIdContext& Ctx, FId& Id, FStateTreeExecutionContext& StateTreeContext)
 {
 	if (!StateTreeContext.IsValid())
 	{
 		return false;
 	}
 
-	FIdContext MutableCtx{Ctx};
-	FId MutableId{Id};
 	StateTreeContext.SetContextDataByName(
-		UPipeECSStateTreeSchema::DataName_Context, FStateTreeDataView(FStructView::Make(MutableCtx)));
+		UPipeECSStateTreeSchema::DataName_Context, FStateTreeDataView(FStructView::Make(Ctx)));
 	StateTreeContext.SetContextDataByName(
-		UPipeECSStateTreeSchema::DataName_OwnerId, FStateTreeDataView(FStructView::Make(MutableId)));
+		UPipeECSStateTreeSchema::DataName_OwnerId, FStateTreeDataView(FStructView::Make(Id)));
 
 	StateTreeContext.SetCollectExternalDataCallback(FOnCollectStateTreeExternalData::CreateLambda(
-		[MutableCtx, MutableId](const FStateTreeExecutionContext& Context, const UStateTree* StateTree,
+		[Ctx, Id](const FStateTreeExecutionContext& Context, const UStateTree* StateTree,
 			TArrayView<const FStateTreeExternalDataDesc> ExternalDescs,
 			TArrayView<FStateTreeDataView> OutDataViews) {
 			check(ExternalDescs.Num() == OutDataViews.Num());
 
-			p::IdContext& IdCtx = *MutableCtx;
-			const p::Id EntityId = MutableId;
+			p::IdContext& IdCtx = *Ctx;
+			const p::Id EntityId = Id;
 
 			for (int32 Index = 0; Index < ExternalDescs.Num(); Index++)
 			{
