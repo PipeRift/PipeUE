@@ -18,6 +18,7 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 	{
 		return;
 	}
+	UECSSubsystem* ECSSystem = UECSSubsystem::Get(World);
 	const double TimeInSeconds = World->GetTimeSeconds();
 
 	// Tick all running state trees
@@ -33,9 +34,7 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 		}
 		auto& Instance = Ctx->Get<CStateTreeInstance>(Id);
 
-		FStateTreeExecutionContext ExecutionContext{
-			*GetTransientPackage(), *StateTree, Instance.InstanceData};
-		ExecutionContext.SetOuterTraceId(Id.value);
+		FStateTreeExecutionContext ExecutionContext{*ECSSystem, *StateTree, Instance.InstanceData};
 		const FId IdStruct{Id};
 		if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
 		{
@@ -75,11 +74,10 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 		{
 			if (auto* Instance = Ctx->TryGet<CStateTreeInstance>(Id))
 			{
-				if (IsValid(LastStateTree))
+if (IsValid(LastStateTree))
 				{
 					FStateTreeExecutionContext ExecutionContext{
-						*GetTransientPackage(), *LastStateTree, Instance->InstanceData};
-					ExecutionContext.SetOuterTraceId(Id.value);
+						*ECSSystem, *LastStateTree, Instance->InstanceData};
 					const FId IdStruct{Id};
 					if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
 					{
@@ -120,8 +118,7 @@ void UPipeStateTreeSystem::Update(const FIdContext& Ctx, float DeltaTime)
 		auto& Instance = Ctx->GetOrAdd<CStateTreeInstance>(Id);
 
 		FStateTreeExecutionContext ExecutionContext{
-			*GetTransientPackage(), *StateTree, Instance.InstanceData};
-		ExecutionContext.SetOuterTraceId(Id.value);
+			*ECSSystem, *StateTree, Instance.InstanceData};
 		const FId IdStruct{Id};
 		if (!SetContextRequirements(Ctx, IdStruct, ExecutionContext))
 		{
