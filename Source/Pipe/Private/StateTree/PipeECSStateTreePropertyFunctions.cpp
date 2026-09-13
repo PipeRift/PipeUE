@@ -5,6 +5,14 @@
 #include "StateTree/PipeECSStateTreePropertyFunctionHelpers.h"
 
 #include <StateTreeExecutionContext.h>
+#if defined(_MSC_VER)
+#	pragma warning(push)
+#	pragma warning(disable : 4201)	   // Nonstandard: anonymous struct/union
+#endif
+#include <StateTreeNodeDescriptionHelpers.h>
+#if defined(_MSC_VER)
+#	pragma warning(pop)
+#endif
 
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(PipeECSStateTreePropertyFunctions)
@@ -60,12 +68,11 @@ FText FStateTreeEqualsIdPropertyFunction::GetDescription(const FGuid& ID, FState
 	const FText RightValue = BindingLookup.GetBindingSourceDisplayName(
 		FPropertyBindingPath(ID, GET_MEMBER_NAME_CHECKED(FInstanceDataType, Right)), Formatting);
 
-	const FText Left = LeftValue.IsEmpty()
-						   ? UE::StateTree::DescHelpers::GetText(InstanceData.Left, Formatting)
-						   : LeftValue;
+	const FText Left =
+		LeftValue.IsEmpty() ? UE::StateTree::DescHelpers::GetText(InstanceData.Left, Formatting) : LeftValue;
 	const FText Right = RightValue.IsEmpty()
-							? UE::StateTree::DescHelpers::GetText(InstanceData.Right, Formatting)
-							: RightValue;
+						  ? UE::StateTree::DescHelpers::GetText(InstanceData.Right, Formatting)
+						  : RightValue;
 
 	const FText Format = (Formatting == EStateTreeNodeFormatting::RichText)
 						   ? LOCTEXT("EqualsIdRich", "<s>Equals</>({Left}, {Right})")

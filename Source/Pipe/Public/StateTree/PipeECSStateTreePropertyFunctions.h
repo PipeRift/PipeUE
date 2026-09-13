@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "PipeECSStateTreePropertyFunctionHelpers.h"
 #include "PipeUE.h"
 
 #include <StateTree/PipeECSStateTreePropertyFunctionBase.h>

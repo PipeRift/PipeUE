@@ -17,12 +17,3 @@ namespace UE::StateTree::DescHelpers
 	}
 }	 // namespace UE::StateTree::DescHelpers
 #endif	  // WITH_EDITOR
-
-#if defined(_MSC_VER)
-#	pragma warning(push)
-#	pragma warning(disable : 4201)	   // Nonstandard: anonymous struct/union
-#endif
-#include <StateTreeNodeDescriptionHelpers.h>
-#if defined(_MSC_VER)
-#	pragma warning(pop)
-#endif

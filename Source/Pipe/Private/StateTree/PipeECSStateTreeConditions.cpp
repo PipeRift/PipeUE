@@ -5,6 +5,14 @@
 #include "StateTree/PipeECSStateTreePropertyFunctionHelpers.h"
 
 #include <StateTreeExecutionContext.h>
+#if defined(_MSC_VER)
+#	pragma warning(push)
+#	pragma warning(disable : 4201)	   // Nonstandard: anonymous struct/union
+#endif
+#include <StateTreeNodeDescriptionHelpers.h>
+#if defined(_MSC_VER)
+#	pragma warning(pop)
+#endif
 
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(PipeECSStateTreeConditions)
