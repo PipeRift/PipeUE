@@ -23,14 +23,14 @@ const FName UPipeECSStateTreeSchema::DataName_OwnerId{TEXT("OwnerId")};
 
 namespace p
 {
-	FIdContext GetIdContext(FStateTreeExecutionContext& Context)
+	p::IdContext& GetIdContext(FStateTreeExecutionContext& Context)
 	{
 		const FStateTreeDataView View =
 			Context.GetContextDataByName(UPipeECSStateTreeSchema::DataName_Context);
-		return View.Get<FIdContext>();
+		return *View.Get<FIdContext>();
 	}
 
-	FId GetOwnerId(FStateTreeExecutionContext& Context)
+	p::Id GetOwnerId(FStateTreeExecutionContext& Context)
 	{
 		const FStateTreeDataView View =
 			Context.GetContextDataByName(UPipeECSStateTreeSchema::DataName_OwnerId);

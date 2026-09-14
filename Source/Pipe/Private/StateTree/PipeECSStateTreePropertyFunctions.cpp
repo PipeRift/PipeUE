@@ -3,6 +3,7 @@
 #include "StateTree/PipeECSStateTreePropertyFunctions.h"
 
 #include "StateTree/PipeECSStateTreePropertyFunctionHelpers.h"
+#include "StateTree/PipeECSStateTreeSchema.h"
 
 #include <StateTreeExecutionContext.h>
 #if defined(_MSC_VER)
@@ -24,7 +25,7 @@ void FStateTreeIsIdValidPropertyFunction::Execute(FStateTreeExecutionContext& Co
 {
 	FInstanceDataType& InstanceData = Context.GetInstanceData(*this);
 
-	InstanceData.bIsValid = !InstanceData.Input.IsNone();
+	InstanceData.bIsValid = p::GetIdContext(Context).IsValid(InstanceData.Input);
 }
 
 void FStateTreeIsIdNonePropertyFunction::Execute(FStateTreeExecutionContext& Context) const

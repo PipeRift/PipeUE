@@ -535,20 +535,19 @@ class P_API UPipeLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
-	UFUNCTION(BlueprintPure, Category = "Pipe|ECS")
+	UFUNCTION(BlueprintPure, Category = "Pipe")
 	static bool IsNone(FId Id)
 	{
 		return Id.IsNone();
 	}
 
-	UFUNCTION(
-		BlueprintPure, meta = (DisplayName = "Equal (PipeId)", CompactNodeTitle = "=="), Category = "Pipe")
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Equal (Id)", CompactNodeTitle = "=="), Category = "Pipe")
 	static bool EqualEqual_PipeId(const FId& A, const FId& B)
 	{
 		return A == B;
 	}
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Not Equal (PipeId)", CompactNodeTitle = "!="),
-		Category = "Pipe")
+	UFUNCTION(
+		BlueprintPure, meta = (DisplayName = "Not Equal (Id)", CompactNodeTitle = "!="), Category = "Pipe")
 	static bool NotEqual_PipeId(const FId& A, const FId& B)
 	{
 		return A != B;

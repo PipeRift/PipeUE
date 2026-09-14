@@ -24,7 +24,7 @@ struct FStateTreeIsIdValidPropertyFunctionInstanceData
 /**
  * Check if an entity Id is valid (not none).
  */
-USTRUCT(meta = (DisplayName = "Is Valid (FId)", Category = "Id"))
+USTRUCT(meta = (DisplayName = "Id Is Valid", Category = "Pipe"))
 struct PIPE_API FStateTreeIsIdValidPropertyFunction : public FStateTreePropertyFunctionPipeECSBase
 {
 	GENERATED_BODY()
@@ -60,7 +60,7 @@ struct FStateTreeIsIdNonePropertyFunctionInstanceData
 /**
  * Check if an entity Id is none (invalid).
  */
-USTRUCT(meta = (DisplayName = "Is None (FId)", Category = "Id"))
+USTRUCT(meta = (DisplayName = "Id Is None", Category = "Pipe"))
 struct PIPE_API FStateTreeIsIdNonePropertyFunction : public FStateTreePropertyFunctionPipeECSBase
 {
 	GENERATED_BODY()
@@ -99,7 +99,7 @@ struct FStateTreeEqualsIdPropertyFunctionInstanceData
 /**
  * Check if two entity Ids are equal.
  */
-USTRUCT(meta = (DisplayName = "Equals (FId)", Category = "Id"))
+USTRUCT(meta = (DisplayName = "Id Equals", Category = "Pipe"))
 struct PIPE_API FStateTreeEqualsIdPropertyFunction : public FStateTreePropertyFunctionPipeECSBase
 {
 	GENERATED_BODY()

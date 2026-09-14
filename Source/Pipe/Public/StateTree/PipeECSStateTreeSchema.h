@@ -13,8 +13,8 @@ struct FStateTreeExecutionContext;
 
 namespace p
 {
-	FIdContext PIPE_API GetIdContext(FStateTreeExecutionContext& Context);
-	FId PIPE_API GetOwnerId(FStateTreeExecutionContext& Context);
+	PIPE_API p::IdContext& GetIdContext(FStateTreeExecutionContext& Context);
+	PIPE_API p::Id GetOwnerId(FStateTreeExecutionContext& Context);
 }	 // namespace p
 
 
